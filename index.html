@@ -3,832 +3,528 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Matrícula · Radix Matemática</title>
+<meta name="robots" content="noindex">
+<title>Radix Cursos — Isolados 2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ============ IDENTIDADE RADIX CURSOS ============
+     Tinta escura + creme + âmbar "raiz". Cada matéria tem a sua cor.
+     Diferente do app (azul), mas a Matemática mantém o azul como ponte. */
   :root {
-    --radix-blue: #3b82f6; --radix-cyan: #22d3ee; --radix-coral: #ff7a5c;
-    --radix-bg: #0e1a36; --radix-bg-2: #13234a; --radix-surface: #19284e; --radix-surface-2: #223464; --radix-surface-3: #2b417a;
-    --radix-line: rgba(255,255,255,0.08); --radix-line-2: rgba(255,255,255,0.14);
-    --radix-text: #eaf1ff; --radix-text-2: #c6d2ec; --radix-text-muted: #8aa0c9;
-    --radix-success: #34d399; --radix-warning: #fbbf24; --radix-red: #ff5e3a;
-    --radix-grad-brand: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+    --bg: #0f1311; --bg-2: #151a17; --surface: #1b211d; --surface-2: #232b26;
+    --line: rgba(244,239,230,.09); --line-2: rgba(244,239,230,.16);
+    --text: #f4efe6; --text-2: #d3ccbf; --muted: #9a9486;
+    --raiz: #e8a33d; --raiz-2: #f3c173; --raiz-tx: #1a1206;
+    --ok: #7bd4a0;
+    --shadow: 0 20px 50px rgba(0,0,0,.35);
+    --grain: rgba(255,255,255,.025);
+    /* cores das matérias (fundo suave + traço) */
+    --mat: #5b9bff; --fis: #a78bfa; --bio: #6fcf8b; --qui: #2fc6c0;
+    --hum: #e98a5c; --red: #f07aa0; --lin: #e8c547;
+    color-scheme: dark;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root[data-theme="light"] {
+    --bg: #f6f1e7; --bg-2: #efe8da; --surface: #fffdf8; --surface-2: #f3ecdf;
+    --line: rgba(40,32,18,.09); --line-2: rgba(40,32,18,.16);
+    --text: #1d1a14; --text-2: #4a4336; --muted: #7a7160;
+    --raiz: #b86e0b; --raiz-2: #8f5406; --raiz-tx: #fffaf0;
+    --ok: #1f8a52;
+    --shadow: 0 16px 40px rgba(80,60,20,.12);
+    --grain: rgba(0,0,0,.02);
+    --mat: #2563d9; --fis: #7048d6; --bio: #25864a; --qui: #0e8984;
+    --hum: #c05a26; --red: #c83f6c; --lin: #9a7a06;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f6f1e7; --bg-2: #efe8da; --surface: #fffdf8; --surface-2: #f3ecdf;
+      --line: rgba(40,32,18,.09); --line-2: rgba(40,32,18,.16);
+      --text: #1d1a14; --text-2: #4a4336; --muted: #7a7160;
+      --raiz: #b86e0b; --raiz-2: #8f5406; --raiz-tx: #fffaf0;
+      --ok: #1f8a52;
+      --shadow: 0 16px 40px rgba(80,60,20,.12);
+      --grain: rgba(0,0,0,.02);
+      --mat: #2563d9; --fis: #7048d6; --bio: #25864a; --qui: #0e8984;
+      --hum: #c05a26; --red: #c83f6c; --lin: #9a7a06;
+      color-scheme: light;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    background: radial-gradient(1200px 600px at 80% -10%, rgba(34,211,238,.10), transparent 60%),
-                radial-gradient(900px 500px at -10% 20%, rgba(59,130,246,.12), transparent 60%), var(--radix-bg);
-    background-attachment: fixed; color: var(--radix-text); min-height: 100vh; -webkit-font-smoothing: antialiased;
+    background: var(--bg); color: var(--text); line-height: 1.55;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  a { color: var(--radix-cyan); }
-  header.top { border-bottom: 1px solid var(--radix-line); background: rgba(14,26,54,.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 5; }
-  .top-in { max-width: 1040px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.3px; }
-  .brand .logo { display: inline-flex; width: 34px; height: 34px; border-radius: 9px; background: var(--radix-grad-brand); align-items: center; justify-content: center; }
-  .brand small { display: block; font-size: 11px; font-weight: 600; color: var(--radix-text-muted); letter-spacing: .08em; text-transform: uppercase; }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--radix-surface-2); color: var(--radix-text-2); }
-  .chip.ok { background: rgba(52,211,153,.15); color: var(--radix-success); }
-  .chip.warn { background: rgba(251,191,36,.15); color: var(--radix-warning); }
-  .chip.err { background: rgba(255,94,58,.15); color: var(--radix-coral); }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 22px 20px 60px; }
-  .sandbox { border-left: 3px solid var(--radix-warning); background: rgba(251,191,36,.08); padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.55; margin-bottom: 22px; color: var(--radix-text-2); }
-  .sandbox b { color: var(--radix-text); }
-  .passos { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
-  .passo { flex: 1; min-width: 140px; padding: 10px 12px; border-radius: 10px; background: var(--radix-surface); border: 1px solid var(--radix-line); font-size: 12px; color: var(--radix-text-muted); font-weight: 600; }
-  .passo b { display: block; font-size: 13px; color: var(--radix-text-2); margin-top: 2px; }
-  .passo.on { border-color: var(--radix-cyan); background: var(--radix-surface-2); }
-  .passo.on b { color: var(--radix-text); }
-  .passo.done { border-color: rgba(52,211,153,.5); }
-  .passo.done b { color: var(--radix-success); }
-  section.card { background: var(--radix-surface); border: 1px solid var(--radix-line); border-radius: 16px; padding: 22px; margin-bottom: 18px; }
-  section.card[hidden] { display: none; }
-  h1 { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 6px; }
-  h2 { font-size: 18px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 4px; }
-  .sub { color: var(--radix-text-muted); font-size: 14px; line-height: 1.55; margin-bottom: 14px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
-  .turma { background: var(--radix-surface-2); border: 1px solid var(--radix-line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-  .turma.sel { border-color: var(--radix-cyan); box-shadow: 0 0 0 2px rgba(34,211,238,.25); }
-  .turma h3 { font-size: 15px; font-weight: 800; line-height: 1.3; }
-  .turma .meta { font-size: 12.5px; color: var(--radix-text-muted); line-height: 1.5; }
-  .turma .preco { font-size: 22px; font-weight: 900; margin-top: 4px; }
-  .turma .preco small { font-size: 12px; color: var(--radix-text-muted); font-weight: 600; }
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 10px; min-height: 42px; padding: 9px 16px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: transform .12s, filter .12s; color: var(--radix-text); background: var(--radix-surface-3); }
-  .btn:hover { filter: brightness(1.08); }
-  .btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
-  .btn-pri { background: var(--radix-grad-brand); color: #06121f; }
-  .btn-sec { background: var(--radix-surface-3); }
-  .btn-ghost { background: transparent; border: 1px solid var(--radix-line-2); }
-  .btn-sm { min-height: 34px; padding: 6px 12px; font-size: 13px; }
-  .campo { margin-bottom: 12px; }
-  .campo label { display: block; font-size: 12px; font-weight: 700; color: var(--radix-text-muted); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
-  .campo input, .campo select { width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--radix-line-2); background: var(--radix-bg-2); color: var(--radix-text); font-size: 15px; font-family: inherit; }
-  .campo input:focus, .campo select:focus { outline: none; border-color: var(--radix-cyan); }
-  .campo small { display: block; margin-top: 5px; font-size: 12px; color: var(--radix-text-muted); }
-  .linha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .abas { display: flex; gap: 6px; margin-bottom: 14px; }
-  .abas button { flex: 1; }
-  .abas button.on { background: var(--radix-surface-3); border: 1px solid var(--radix-cyan); }
-  .radios { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
-  .radios label { flex: 1; min-width: 180px; display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--radix-line-2); background: var(--radix-bg-2); cursor: pointer; font-weight: 600; font-size: 14px; }
-  .radios label.on { border-color: var(--radix-cyan); background: var(--radix-surface-2); }
-  .radios input { accent-color: var(--radix-cyan); }
-  .metodos { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-  .metodos button { flex: 1; min-width: 120px; }
-  .metodos button.on { background: var(--radix-surface-3); border: 1px solid var(--radix-cyan); }
-  .resumo { background: var(--radix-bg-2); border: 1px solid var(--radix-line); border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-size: 14px; line-height: 1.6; }
-  .resumo b { color: var(--radix-text); }
-  .msg { font-size: 13.5px; line-height: 1.5; min-height: 18px; margin-top: 10px; }
-  .msg.err { color: var(--radix-coral); }
-  .msg.ok { color: var(--radix-success); }
-  .msg.warn { color: var(--radix-warning); }
-  .acoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
-  .pix { display: grid; grid-template-columns: 220px 1fr; gap: 18px; align-items: start; }
-  .pix img { width: 220px; height: 220px; background: #fff; padding: 10px; border-radius: 12px; }
-  .pix textarea { width: 100%; min-height: 110px; padding: 10px; border-radius: 10px; border: 1px solid var(--radix-line-2); background: var(--radix-bg-2); color: var(--radix-text); font-family: ui-monospace, monospace; font-size: 12px; resize: vertical; }
-  .status-pg { display: flex; align-items: center; gap: 10px; font-weight: 700; margin-top: 12px; }
-  .spinner { width: 16px; height: 16px; border: 2px solid var(--radix-line-2); border-top-color: var(--radix-cyan); border-radius: 50%; animation: gira .8s linear infinite; }
-  @keyframes gira { to { transform: rotate(360deg); } }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--radix-line); vertical-align: top; }
-  th { color: var(--radix-text-muted); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
-  .mono { font-family: ui-monospace, monospace; font-size: 12px; color: var(--radix-text-muted); }
-  footer { color: var(--radix-text-muted); font-size: 12px; text-align: center; margin-top: 30px; }
-  /* menus do cabeçalho */
-  .menu-wrap { position: relative; }
-  .menu-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--radix-surface-2); border: 1px solid var(--radix-line); color: var(--radix-text); border-radius: 10px; padding: 7px 12px; font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: inherit; min-height: 38px; }
-  .menu-btn:hover { border-color: var(--radix-line-2); }
-  .menu-btn[aria-expanded="true"] { border-color: var(--radix-cyan); }
-  .menu-btn .ini { width: 24px; height: 24px; border-radius: 50%; background: var(--radix-grad-brand); color: #06121f; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-  .menu-btn .seta { opacity: .6; }
-  .menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 250px; background: var(--radix-surface); border: 1px solid var(--radix-line-2); border-radius: 12px; box-shadow: 0 18px 44px rgba(0,0,0,.55); padding: 6px; z-index: 40; }
-  .menu[hidden] { display: none; }
-  .menu-cab { padding: 10px 12px 8px; border-bottom: 1px solid var(--radix-line); margin-bottom: 6px; }
-  .menu-cab b { display: block; font-size: 14px; }
-  .menu-cab span { display: block; font-size: 12px; color: var(--radix-text-muted); word-break: break-all; margin-top: 2px; }
-  .menu button, .menu a { display: flex; width: 100%; align-items: center; gap: 10px; background: transparent; border: none; color: var(--radix-text-2); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; font-family: inherit; text-decoration: none; }
-  .menu button:hover, .menu a:hover, .menu button:focus-visible, .menu a:focus-visible { background: var(--radix-surface-2); color: var(--radix-text); outline: none; }
-  .menu .sep { height: 1px; background: var(--radix-line); margin: 6px 0; }
-  .menu .ic { display: inline-flex; width: 18px; justify-content: center; opacity: .8; flex: 0 0 18px; }
-  .menu .zap { color: var(--radix-success); }
-  .menu small { display: block; font-size: 11.5px; font-weight: 500; color: var(--radix-text-muted); margin-top: 1px; }
-  .dados { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .dados th { width: 42%; color: var(--radix-text-muted); font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13px; }
-  .modal-fundo { position: fixed; inset: 0; background: rgba(6,12,26,.72); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 60; }
-  .modal-cx { background: var(--radix-surface); border: 1px solid var(--radix-line-2); border-radius: 16px; padding: 24px; width: 100%; max-width: 520px; max-height: 86vh; overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
-  .modal-cx h3 { font-size: 19px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 10px; }
-  .passos-txt { margin: 4px 0 14px 18px; font-size: 14px; line-height: 1.7; color: var(--radix-text-2); }
-  .passos-txt b { color: var(--radix-text); }
-  @media (max-width: 640px) { .pix { grid-template-columns: 1fr; } .pix img { margin: 0 auto; } .linha { grid-template-columns: 1fr; } .menu { min-width: 220px; } .menu-btn .rotulo { display: none; } }
+  h1, h2, h3, .display { font-family: 'Bricolage Grotesque', 'Inter', sans-serif; letter-spacing: -.02em; }
+  a { color: inherit; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+  :focus-visible { outline: 2px solid var(--raiz); outline-offset: 3px; border-radius: 6px; }
+
+  /* ---------- topo ---------- */
+  header.top {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
+  }
+  header.top .wrap { display: flex; align-items: center; gap: 20px; height: 66px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand svg { width: 34px; height: 34px; flex: none; }
+  .brand b { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -.03em; }
+  .brand small { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: -2px; }
+  nav.links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; font-weight: 500; }
+  nav.links a { text-decoration: none; color: var(--text-2); }
+  nav.links a:hover { color: var(--text); }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line-2);
+    background: transparent; color: var(--text-2); display: grid; place-items: center; cursor: pointer;
+  }
+  .icon-btn:hover { color: var(--text); background: var(--surface); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 20px; border-radius: 12px; font: 600 15px 'Inter', sans-serif;
+    text-decoration: none; border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-raiz { background: var(--raiz); color: var(--raiz-tx); }
+  .btn-raiz:hover { background: var(--raiz-2); color: var(--raiz-tx); }
+  .btn-line { border-color: var(--line-2); color: var(--text); background: transparent; }
+  .btn-line:hover { background: var(--surface); }
+  .btn svg { width: 17px; height: 17px; }
+  .top .btn { padding: 9px 14px; font-size: 14px; }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; padding: 72px 0 40px; overflow: hidden; }
+  .hero-roots { position: absolute; right: -80px; top: -20px; width: 620px; opacity: .55; pointer-events: none; color: var(--raiz); }
+  .kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--raiz); }
+  .kicker::before { content: ''; width: 22px; height: 2px; background: currentColor; border-radius: 2px; }
+  .hero h1 { font-size: clamp(40px, 6.4vw, 76px); line-height: .98; font-weight: 800; margin: 18px 0 20px; max-width: 13ch; }
+  .hero h1 em { font-style: normal; color: var(--raiz); }
+  .hero p.lead { font-size: clamp(16px, 1.6vw, 19px); color: var(--text-2); max-width: 54ch; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+  .hero-facts { display: flex; gap: 34px; flex-wrap: wrap; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); max-width: 640px; }
+  .hero-facts div b { display: block; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; }
+  .hero-facts div span { font-size: 13px; color: var(--muted); }
+
+  /* ---------- seletor de formato ---------- */
+  section { padding: 56px 0; }
+  .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+  .sec-head h2 { font-size: clamp(28px, 3.6vw, 42px); font-weight: 800; line-height: 1.05; }
+  .sec-head p { color: var(--muted); max-width: 48ch; margin-top: 8px; }
+  .seg { display: inline-flex; padding: 4px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+  .seg button {
+    border: 0; background: transparent; color: var(--text-2); font: 600 14px 'Inter', sans-serif;
+    padding: 10px 18px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+  .seg button svg { width: 16px; height: 16px; }
+
+  /* ---------- cards de curso ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .card {
+    --c: var(--raiz);
+    position: relative; display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+    padding: 22px; overflow: hidden; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .card::before {
+    content: ''; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--c);
+  }
+  .card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); box-shadow: var(--shadow); }
+  /* faixa de topo: matéria à esquerda, professor recortado à direita */
+  .card-hero {
+    position: relative; margin: -22px -22px 18px; height: 250px; padding: 22px 22px 20px;
+    display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+    background:
+      radial-gradient(260px 200px at 78% 70%, color-mix(in srgb, var(--c) 34%, transparent), transparent 70%),
+      linear-gradient(160deg, color-mix(in srgb, var(--c) 16%, var(--surface)), var(--surface) 75%);
+    border-bottom: 1px solid var(--line);
+  }
+  .card-hero img {
+    position: absolute; right: 0; bottom: 0; height: 92%; max-width: 54%;
+    object-fit: contain; object-position: right bottom;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,.28)); transition: transform .3s ease;
+  }
+  .card:hover .card-hero img { transform: scale(1.03); transform-origin: right bottom; }
+  .hero-txt { position: relative; z-index: 1; max-width: 50%; }
+  .glyph {
+    width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 10px;
+    background: color-mix(in srgb, var(--c) 20%, transparent); color: var(--c);
+  }
+  .glyph svg { width: 22px; height: 22px; }
+  .card h3 { font-size: 28px; font-weight: 800; line-height: 1.02; }
+  .card .area { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .quem { margin-top: 10px; font-size: 13px; color: var(--text-2); line-height: 1.3; }
+  .quem b { display: block; font-size: 15px; color: var(--text); font-weight: 700; }
+  .card ul { list-style: none; display: grid; gap: 7px; font-size: 14px; color: var(--text-2); margin-bottom: 18px; }
+  .card li { display: flex; gap: 9px; align-items: flex-start; }
+  .card li svg { width: 16px; height: 16px; flex: none; margin-top: 3px; color: var(--c); }
+  .card-foot { margin-top: auto; display: flex; align-items: end; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px dashed var(--line-2); }
+  .price small { display: block; font-size: 11.5px; color: var(--muted); }
+  .price b { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; }
+  .price .tbd { font-size: 15px; font-weight: 600; color: var(--text-2); font-family: 'Inter', sans-serif; }
+  .card .btn { padding: 10px 16px; font-size: 14px; }
+  .btn-curso { background: var(--c); color: #0f1311; }
+  .btn-curso:hover { filter: brightness(1.08); }
+  :root[data-theme="light"] .btn-curso { color: #fff; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .btn-curso { color: #fff; } }
+  .badge {
+    position: relative; z-index: 1; align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; padding: 5px 9px; border-radius: 999px;
+    background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c);
+  }
+  .badge.soon { background: color-mix(in srgb, var(--bg) 70%, transparent); color: var(--text-2); }
+  .card.is-soon .btn-curso { background: transparent; color: var(--text-2); border-color: var(--line-2); }
+
+  .m { --c: var(--mat); } .f { --c: var(--fis); } .b { --c: var(--bio); } .q { --c: var(--qui); }
+  .h { --c: var(--hum); } .r { --c: var(--red); } .l { --c: var(--lin); }
+
+  /* ---------- como funciona ---------- */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; counter-reset: s; }
+  .step { padding: 24px; border-radius: 18px; border: 1px solid var(--line); background: var(--bg-2); }
+  .step::before {
+    counter-increment: s; content: counter(s, decimal-leading-zero);
+    font: 800 38px 'Bricolage Grotesque', sans-serif; color: var(--raiz); display: block; margin-bottom: 10px;
+  }
+  .step h3 { font-size: 19px; margin-bottom: 6px; }
+  .step p { font-size: 14.5px; color: var(--text-2); }
+
+  /* ---------- formatos ---------- */
+  .formats { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .format { padding: 28px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+  .format h3 { font-size: 26px; display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .format h3 svg { width: 26px; height: 26px; color: var(--raiz); }
+  .format p { color: var(--muted); margin-bottom: 16px; font-size: 14.5px; }
+  .format ul { list-style: none; display: grid; gap: 10px; }
+  .format li { display: flex; gap: 10px; font-size: 14.5px; color: var(--text-2); }
+  .format li svg { width: 18px; height: 18px; flex: none; color: var(--ok); margin-top: 2px; }
+
+  /* ---------- faixa combo ---------- */
+  .combo {
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: center;
+    padding: 36px; border-radius: 24px; border: 1px solid color-mix(in srgb, var(--raiz) 40%, var(--line));
+    background:
+      radial-gradient(600px 240px at 0% 0%, color-mix(in srgb, var(--raiz) 16%, transparent), transparent 70%),
+      var(--surface);
+  }
+  .combo h2 { font-size: clamp(26px, 3vw, 36px); line-height: 1.08; margin: 10px 0; }
+  .combo p { color: var(--text-2); }
+  .dots { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .dots span { padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; border: 1px solid var(--line-2); display: inline-flex; align-items: center; gap: 7px; }
+  .dots span i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+
+  /* ---------- FAQ ---------- */
+  .faq { display: grid; gap: 10px; max-width: 820px; }
+  details { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  summary { cursor: pointer; list-style: none; padding: 18px 20px; font-weight: 600; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; font: 700 20px 'Bricolage Grotesque', sans-serif; color: var(--raiz); line-height: 1; }
+  details[open] summary::after { content: '−'; }
+  details p { padding: 0 20px 18px; color: var(--text-2); font-size: 14.5px; }
+
+  /* ---------- rodapé ---------- */
+  footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 30px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: center; }
+  footer p { font-size: 13px; color: var(--muted); }
+
+  /* ---------- faixa de esboço ---------- */
+  .draft {
+    background: repeating-linear-gradient(-45deg, var(--raiz) 0 10px, color-mix(in srgb, var(--raiz) 80%, #000) 10px 20px);
+    color: var(--raiz-tx); font-size: 12.5px; font-weight: 700; text-align: center; padding: 6px 12px;
+  }
+  .draft span { background: var(--raiz); padding: 2px 8px; border-radius: 4px; }
+
+  @media (max-width: 820px) {
+    nav.links { display: none; }
+    header.top .wrap { gap: 10px; }
+    .brand { margin-right: auto; }
+    .combo { grid-template-columns: 1fr; padding: 26px; }
+    .dots { justify-content: flex-start; }
+    .hero { padding-top: 48px; }
+    .hero-roots { width: 420px; right: -170px; opacity: .3; }
+  }
+  @media (max-width: 420px) {
+    .wrap { padding: 0 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .top .btn-raiz span { display: none; }
+    .seg { width: 100%; } .seg button { flex: 1; justify-content: center; padding: 10px 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
+<script>
+  // Tema salvo (sem piscar). Chave própria, separada do app.
+  try { var t = localStorage.getItem('radix-cursos-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+
+<div class="draft"><span>ESBOÇO — valores, datas e links de compra a definir</span></div>
+
 <header class="top">
-  <div class="top-in">
-    <div class="brand">
-      <span class="logo"><svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="#06121f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18 L8 18 L13 27 L19 6 L30 6"/></svg></span>
-      <span>Radix Matemática<small>Matrícula</small></span>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center;">
-
-      <!-- AJUDA: sempre disponível, mesmo sem conta -->
-      <div class="menu-wrap">
-        <button class="menu-btn" id="btn-ajuda" aria-haspopup="true" aria-expanded="false" aria-controls="menu-ajuda" onclick="alternarMenu('ajuda')">
-          <span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
-          <span class="rotulo">Ajuda</span>
-        </button>
-        <div class="menu" id="menu-ajuda" role="menu" aria-labelledby="btn-ajuda" hidden>
-          <div class="menu-cab"><b>Precisa de ajuda?</b><span>Atendimento do Radix Matemática</span></div>
-          <a role="menuitem" id="link-whats" href="#" target="_blank" rel="noopener">
-            <span class="ic zap" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm0 18.15c-1.53 0-3.03-.41-4.34-1.19l-.31-.18-3.12.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24z"/></svg></span>
-            <span>WhatsApp (84) 99813-1870<small>Atendimento do Radix Matemática</small></span>
-          </a>
-          <button role="menuitem" onclick="fecharMenus();abrirComoFunciona()">
-            <span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
-            <span>Como funciona a matrícula<small>Passo a passo e formas de pagamento</small></span>
-          </button>
-        </div>
-      </div>
-
-      <!-- CONTA: só com sessão -->
-      <div class="menu-wrap" id="wrap-conta" hidden>
-        <button class="menu-btn" id="btn-conta-menu" aria-haspopup="true" aria-expanded="false" aria-controls="menu-conta" onclick="alternarMenu('conta')">
-          <span class="ini" id="conta-iniciais" aria-hidden="true"></span>
-          <span class="rotulo" id="conta-primeiro"></span>
-          <span class="seta" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-        </button>
-        <div class="menu" id="menu-conta" role="menu" aria-labelledby="btn-conta-menu" hidden>
-          <div class="menu-cab"><b id="menu-nome"></b><span id="menu-email"></span></div>
-          <button role="menuitem" onclick="fecharMenus();abrirPerfil()">
-            <span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-            <span>Meu perfil<small>Nome, e-mail e conta</small></span>
-          </button>
-          <button role="menuitem" onclick="fecharMenus();abrirPagamentos()">
-            <span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
-            <span>Meus pagamentos<small>Pedidos, cobranças e matrículas</small></span>
-          </button>
-          <button role="menuitem" onclick="fecharMenus();abrirTrocarSenha()">
-            <span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-            <span>Trocar senha<small>Senha de acesso à plataforma</small></span>
-          </button>
-          <div class="sep"></div>
-          <button role="menuitem" onclick="fecharMenus();sair()">
-            <span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
-            <span>Sair</span>
-          </button>
-        </div>
-      </div>
-    </div>
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Radix Cursos, início">
+      <!-- marca: o radical que vira raiz -->
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <rect width="40" height="40" rx="11" fill="var(--raiz)"/>
+        <path d="M7 21h5l5 9 8-21h8" stroke="var(--raiz-tx)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 30c-1 3-3 4-5 5M17 30c1 2.6 3 3.6 5 4.4" stroke="var(--raiz-tx)" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+      </svg>
+      <span><b>radix</b><small>cursos</small></span>
+    </a>
+    <nav class="links" aria-label="Seções">
+      <a href="#cursos">Isolados</a>
+      <a href="#como">Como funciona</a>
+      <a href="#formatos">Presencial e online</a>
+      <a href="#duvidas">Dúvidas</a>
+    </nav>
+    <button class="icon-btn" id="tema" type="button" aria-label="Alternar tema claro e escuro">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn-raiz" href="#cursos"><span>Escolher curso</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
   </div>
 </header>
 
-<main class="wrap">
-  <div class="sandbox" id="aviso-sandbox">
-    <b>Página de teste. Isto não é uma matrícula do Radix.</b><br>
-    As turmas e os preços abaixo são de um catálogo de demonstração da plataforma Lumen, não do curso Radix, e o pagamento roda em ambiente de homologação: nenhuma cobrança real é feita e nenhuma vaga é garantida.<br>
-    <b>Não use seu CPF real nem a senha que você usa no Radix.</b> A conta criada aqui fica gravada na plataforma Lumen e não pode ser apagada por esta página. Para se matricular de verdade, fale com o atendimento do Radix pelo WhatsApp (84) 99813-1870.
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <svg class="hero-roots" viewBox="0 0 600 520" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+      <path d="M300 0v140" stroke-width="3"/>
+      <path d="M300 140c0 60-60 80-90 140s-10 120-60 170" stroke-width="2.4"/>
+      <path d="M300 140c0 70 70 90 100 150s0 110 50 160" stroke-width="2.4"/>
+      <path d="M300 140c-4 80 6 170-10 260" stroke-width="2"/>
+      <path d="M210 280c-40 10-80 0-120 30M400 290c40-6 90 10 130 40M290 400c-30 20-40 60-70 90M225 360c20 30 10 70 30 110M430 380c-20 30-10 70-40 100" stroke-width="1.4" opacity=".7"/>
+      <path d="M150 450c-20 20-50 25-70 50M450 450c20 15 50 20 70 45M90 310c-30 0-50 20-70 20M530 330c20 0 40 20 60 20" stroke-width="1" opacity=".5"/>
+    </svg>
+    <div class="wrap">
+      <span class="kicker">Isolados ENEM 2027</span>
+      <h1>Cada matéria com <em>quem entende</em> dela.</h1>
+      <p class="lead">Sete cursos isolados, sete professores de Mossoró. Monte a sua preparação para o ENEM do jeito que você precisa: uma matéria, algumas ou todas, na sala de aula ou de casa.</p>
+      <div class="hero-actions">
+        <a class="btn btn-raiz" href="#cursos">Ver os cursos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </a>
+        <a class="btn btn-line" data-zap href="#">Falar no WhatsApp</a>
+      </div>
+      <div class="hero-facts">
+        <div><b>7</b><span>matérias</span></div>
+        <div><b>2</b><span>formatos: presencial e online</span></div>
+        <div><b>desde 2010</b><span>na preparação para o ENEM</span></div>
+      </div>
+    </div>
   </div>
 
-  <div class="passos" id="passos">
-    <div class="passo" data-p="1">1<b>Turma</b></div>
-    <div class="passo" data-p="2">2<b>Sua conta</b></div>
-    <div class="passo" data-p="3">3<b>Aluno</b></div>
-    <div class="passo" data-p="4">4<b>Pagamento</b></div>
-    <div class="passo" data-p="5">5<b>Confirmação</b></div>
-  </div>
-
-  <!-- 1. CATÁLOGO -->
-  <section class="card" id="sec-catalogo">
-    <h1>Escolha sua turma</h1>
-    <p class="sub" id="catalogo-sub">Carregando as turmas disponíveis…</p>
-    <div class="grid" id="catalogo"></div>
-    <p class="msg" id="catalogo-msg"></p>
-  </section>
-
-  <!-- 2. CONTA -->
-  <section class="card" id="sec-conta" hidden>
-    <h2>Sua conta</h2>
-    <p class="sub">Para reservar a vaga precisamos identificar quem está pagando. Crie uma conta ou entre com a sua.</p>
-    <div class="abas">
-      <button class="btn btn-sec on" id="aba-criar" onclick="modoConta('criar')">Criar conta</button>
-      <button class="btn btn-sec" id="aba-entrar" onclick="modoConta('entrar')">Já tenho conta</button>
-    </div>
-    <div class="campo" id="campo-nome"><label>Seu nome completo</label><input type="text" id="conta-nome" autocomplete="name" placeholder="Nome e sobrenome"></div>
-    <div class="linha">
-      <div class="campo"><label>E-mail</label><input type="email" id="conta-email" autocomplete="email" placeholder="voce@email.com"></div>
-      <div class="campo"><label>Senha</label><input type="password" id="conta-senha" autocomplete="new-password" placeholder="Sua senha"></div>
-    </div>
-    <p class="msg" id="conta-msg"></p>
-    <div class="acoes">
-      <button class="btn btn-pri" id="btn-conta" onclick="enviarConta()">Continuar</button>
-      <button class="btn btn-ghost" onclick="irPara(1)">Voltar</button>
+  <!-- CURSOS -->
+  <section id="cursos">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="kicker">Escolha o seu isolado</span>
+          <h2>Os cursos de 2027</h2>
+          <p>Cada curso tem página própria de matrícula. Escolha o formato e siga para o pagamento.</p>
+        </div>
+        <div class="seg" role="group" aria-label="Formato do curso">
+          <button type="button" data-formato="presencial" aria-pressed="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6"/></svg>Presencial
+          </button>
+          <button type="button" data-formato="online" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Online
+          </button>
+        </div>
+      </div>
+      <div class="grid" id="grade"></div>
     </div>
   </section>
 
-  <!-- 3. ALUNO -->
-  <section class="card" id="sec-aluno" hidden>
-    <h2>Para quem é o curso?</h2>
-    <p class="sub">Quem paga e quem estuda são registros diferentes. Escolha antes de preencher o resto.</p>
-    <div class="radios">
-      <label class="on" id="rad-eu"><input type="radio" name="quem" value="eu" checked onchange="quemEstuda()"> Para mim</label>
-      <label id="rad-outro"><input type="radio" name="quem" value="outro" onchange="quemEstuda()"> Para outra pessoa</label>
-    </div>
-    <div class="campo" id="campo-aluno-nome" hidden><label>Nome completo do aluno</label><input type="text" id="aluno-nome" placeholder="Nome e sobrenome do aluno"></div>
-    <div class="campo" style="max-width:260px"><label>Data de nascimento do aluno</label><input type="date" id="aluno-nasc"><small>Obrigatória mesmo quando o aluno é você.</small></div>
-    <p class="msg" id="aluno-msg"></p>
-    <div class="acoes">
-      <button class="btn btn-pri" onclick="confirmarAluno()">Continuar</button>
-      <button class="btn btn-ghost" onclick="irPara(2)">Voltar</button>
+  <!-- COMBO -->
+  <section style="padding-top:8px">
+    <div class="wrap">
+      <div class="combo">
+        <div>
+          <span class="kicker">Mais de uma matéria?</span>
+          <h2>Monte a sua combinação de isolados.</h2>
+          <p>Quem faz duas ou mais matérias fala com o atendimento para ver condições de pacote. (Ideia para decidir: desconto progressivo por número de isolados.)</p>
+          <div style="margin-top:20px"><a class="btn btn-raiz" data-zap="Olá! Quero fazer mais de um isolado do Radix em 2027." href="#">Montar com o atendimento</a></div>
+        </div>
+        <div class="dots" id="dots"></div>
+      </div>
     </div>
   </section>
 
-  <!-- 4. PAGAMENTO -->
-  <section class="card" id="sec-pagamento" hidden>
-    <h2>Pagamento</h2>
-    <p class="sub">Escolha a forma de pagamento. Depois de gerar a cobrança não dá para trocar a forma nem o parcelamento sem falar com o atendimento, então confira o resumo antes de confirmar.</p>
-    <div class="metodos" id="metodos"></div>
-    <div class="linha">
-      <div class="campo" id="campo-parcelas" hidden><label>Parcelas</label><select id="parcelas"></select><small id="parcelas-nota"></small></div>
-      <div class="campo"><label>CPF do pagador</label><input type="text" id="cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCpf(this)"><small>Só os números são enviados. Não guardamos o CPF nesta página.</small></div>
-    </div>
-    <div class="resumo" id="resumo"></div>
-    <p class="msg" id="pag-msg"></p>
-    <div class="acoes">
-      <button class="btn btn-pri" id="btn-pagar" onclick="confirmarPagamento()">Reservar vaga e gerar pagamento</button>
-      <button class="btn btn-ghost" onclick="irPara(3)">Voltar</button>
+  <!-- COMO FUNCIONA -->
+  <section id="como">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="kicker">Matrícula</span><h2>Como funciona</h2></div></div>
+      <div class="steps">
+        <div class="step"><h3>Escolha o isolado</h3><p>Veja professor, formato e valor de cada curso nesta página.</p></div>
+        <div class="step"><h3>Crie sua conta</h3><p>Na página do curso você faz um cadastro rápido com nome, e-mail e senha.</p></div>
+        <div class="step"><h3>Pague no PIX ou cartão</h3><p>O PIX aprova na hora. No cartão, o parcelamento aparece na tela de pagamento.</p></div>
+        <div class="step"><h3>Comece a estudar</h3><p>Você recebe a confirmação e as orientações da turma ou do acesso online.</p></div>
+      </div>
     </div>
   </section>
 
-  <!-- 5. CONFIRMAÇÃO -->
-  <section class="card" id="sec-conf" hidden>
-    <h2 id="conf-titulo">Pagamento</h2>
-    <p class="sub" id="conf-sub"></p>
-    <div id="conf-corpo"></div>
-    <div class="status-pg" id="conf-status"></div>
-    <p class="msg" id="conf-msg"></p>
-    <div class="acoes" id="conf-acoes"></div>
+  <!-- FORMATOS -->
+  <section id="formatos">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="kicker">Formatos</span><h2>Presencial ou online</h2><p>O conteúdo e o professor são os mesmos. Muda onde e como você assiste.</p></div></div>
+      <div class="formats">
+        <div class="format">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6"/></svg>Presencial</h3>
+          <p>Aulas na sede do Radix, em Mossoró.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Tirar dúvida com o professor na hora</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Turma, rotina e horário fixos</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Material e simulados impressos</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Vagas limitadas por sala</li>
+          </ul>
+        </div>
+        <div class="format">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Online</h3>
+          <p>Para quem mora fora ou precisa de horário livre.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Aulas gravadas para assistir quando quiser</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Material em PDF</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Canal de dúvidas com o professor</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Valor menor que o presencial</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- MEUS PEDIDOS -->
-  <section class="card" id="sec-pedidos" hidden>
-    <h2>Meus pedidos e matrículas</h2>
-    <p class="sub">Tudo o que esta conta comprou, em qualquer loja da plataforma.</p>
-    <div id="pedidos"></div>
-    <div class="acoes"><button class="btn btn-sec btn-sm" onclick="carregarPedidos()">Atualizar</button></div>
+  <!-- DÚVIDAS -->
+  <section id="duvidas">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="kicker">Dúvidas</span><h2>Perguntas frequentes</h2></div></div>
+      <div class="faq">
+        <details><summary>Posso fazer só uma matéria?</summary><p>Pode. Cada isolado é vendido separado. Você escolhe só o que precisa reforçar.</p></details>
+        <details><summary>Quando começam as aulas?</summary><p>[A definir] Data de início e calendário de cada isolado.</p></details>
+        <details><summary>Quais são as formas de pagamento?</summary><p>PIX ou cartão de crédito, direto na página de cada curso. O número de parcelas aparece na hora do pagamento.</p></details>
+        <details><summary>Posso trocar de presencial para online depois?</summary><p>[A definir] Regra de troca de formato durante o ano.</p></details>
+        <details><summary>Onde ficam as aulas presenciais?</summary><p>[A definir] Endereço da sede do Radix em Mossoró.</p></details>
+      </div>
+    </div>
   </section>
-
-  <footer>
-    Radix Matemática · pagamentos via Lumen · <span id="rodape-amb"></span><br>
-    Atendimento: <a id="rodape-whats" href="#" target="_blank" rel="noopener">WhatsApp (84) 99813-1870</a>
-  </footer>
 </main>
 
-<div id="modal-root"></div>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Radix Cursos">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect width="40" height="40" rx="11" fill="var(--raiz)"/><path d="M7 21h5l5 9 8-21h8" stroke="var(--raiz-tx)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><b>radix</b><small>cursos · Mossoró/RN · desde 2010</small></span>
+    </a>
+    <p>Atendimento: <a data-zap href="#">(84) 99813-1870</a> · Radix Empreendimentos Educacionais</p>
+  </div>
+</footer>
 
 <script>
-'use strict';
-/* =====================================================================
-   CONFIGURAÇÃO. A API do Lumen não devolve CORS: as chamadas passam por um
-   proxy de mesma origem (/api/lumen -> Railway). Local: server.js; Vercel:
-   api/lumen/[...caminho].js.
-   ===================================================================== */
-// Atendimento do Radix (o mesmo número do app).
-const RADIX = {
+/* =========================================================
+   CATÁLOGO — edite aqui. Cada curso aponta para a sua página
+   de matrícula (a Matemática já existe: /vendas).
+   url: null = ainda sem página -> botão vira "Avise-me".
+   precos: null = "a definir".
+   ========================================================= */
+const RADIX_CURSOS = {
   whatsapp: '5584998131870',
-  rotulo: '(84) 99813-1870',
-  zapUrl(msg) { return 'https://wa.me/' + this.whatsapp + '?text=' + encodeURIComponent(msg || 'Olá! Tenho uma dúvida sobre a matrícula no Radix Matemática.'); }
+  cursos: [
+    { id: 'matematica', classe: 'm', nome: 'Matemática', area: 'Exatas', prof: 'Hugo Gomes', foto: 'cursos-hugo.webp?v=4',
+      itens: ['Toda a matemática do ENEM', 'Banco de questões no app Radix', 'Simulados com nota TRI'],
+      url: { presencial: 'https://app.radixmatematica.com.br/vendas', online: 'https://app.radixmatematica.com.br/vendas' }, precos: { presencial: null, online: null } },
+    { id: 'fisica', classe: 'f', nome: 'Física', area: 'Ciências da Natureza', prof: 'Rafael Medeiros', foto: 'cursos-rafael.webp',
+      itens: ['Mecânica, eletricidade, ondas e óptica', 'Resolução de questões do ENEM', 'Revisão antes da prova'],
+      url: null, precos: { presencial: null, online: null } },
+    { id: 'biologia', classe: 'b', nome: 'Biologia', area: 'Ciências da Natureza', prof: 'Mateus Medeiros', foto: 'cursos-mateus.webp',
+      itens: ['Ecologia, genética e fisiologia', 'Resolução de questões do ENEM', 'Revisão antes da prova'],
+      url: null, precos: { presencial: null, online: null } },
+    { id: 'redacao', classe: 'r', nome: 'Redação', area: 'Redação ENEM', prof: 'Rhayara Lira', foto: 'cursos-rhayara.webp',
+      itens: ['As 5 competências da correção', 'Temas e repertório', 'Correção individual de textos'],
+      url: null, precos: { presencial: null, online: null } },
+    { id: 'linguagens', classe: 'l', nome: 'Linguagens', area: 'Linguagens', prof: 'Milene Lima', foto: 'cursos-milene.webp?v=2',
+      itens: ['Interpretação de texto e gramática', 'Literatura e artes', 'Resolução de questões do ENEM'],
+      url: null, precos: { presencial: null, online: null } },
+    { id: 'quimica', classe: 'q', nome: 'Química', area: 'Ciências da Natureza', prof: 'Thiago Magalhães', foto: 'cursos-thiago.webp',
+      itens: ['Geral, físico-química e orgânica', 'Resolução de questões do ENEM', 'Revisão antes da prova'],
+      url: null, precos: { presencial: null, online: null } },
+    { id: 'humanas', classe: 'h', nome: 'Humanas', area: 'Ciências Humanas', prof: 'Sandro Cocco', foto: 'cursos-sandro.webp?v=2',
+      itens: ['História, geografia, filosofia e sociologia', 'Leitura de mapas, gráficos e textos', 'Resolução de questões do ENEM'],
+      url: null, precos: { presencial: null, online: null } }
+  ]
 };
-const LUMEN = {
-  proxy: '/api/lumen',
-  slug: 'lumen',                       // loja da beta; trocar pela loja do Radix quando existir
-  fallbackMetodos: ['pix', 'card'],    // até a API devolver acceptedMethods
-  fallbackMaxParcelas: 10,             // até a API devolver maxCardInstallments
-  minParcelaCentavos: 500,             // mínimo da plataforma por parcela (R$ 5,00), não vem na API
-  pollMs: 4000, pollMaxMs: 10 * 60 * 1000,
-  metodosRenderizaveis: ['pix', 'card', 'boleto'],
-  nomes: { pix: 'PIX', card: 'Cartão de crédito', boleto: 'Boleto' }
+
+const GLIFOS = {
+  // radical: a própria raiz
+  matematica: '<path d="M3 13h3l3 7 6-16h6" stroke-width="2.2"/>',
+  fisica: '<ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/>',
+  biologia: '<path d="M7 3c0 6 10 6 10 12s-10 3-10 6M17 3c0 6-10 6-10 12s10 3 10 6M8.5 7h7M8.5 17h7M10 12h4"/>',
+  quimica: '<path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3M7 15h10"/>',
+  humanas: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+  redacao: '<path d="M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4M14 20h6"/>',
+  linguagens: '<path d="M4 5h16v10H10l-5 4v-4H4zM8 9h8M8 12h5"/>'
 };
-const estado = { token: null, conta: null, turmas: [], turma: null, aluno: null, metodo: null, parcelas: null, pedido: null, cobranca: null, pedidoReq: null, cobrancaReq: null, pollTimer: null, pollInicio: 0 };
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>';
+const SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
-/* ---------- dinheiro: só inteiros em centavos, nunca float ---------- */
-function centavos(s) { const m = String(s == null ? '' : s).trim().match(/^(\d+)(?:\.(\d{1,2}))?$/); if (!m) return null; return parseInt(m[1], 10) * 100 + parseInt((m[2] || '0').padEnd(2, '0'), 10); }
-function brl(c) { if (c == null) return '—'; const s = Math.abs(c); return (c < 0 ? '-' : '') + 'R$ ' + Math.floor(s / 100).toLocaleString('pt-BR') + ',' + String(s % 100).padStart(2, '0'); }
-// mesmo arredondamento do servidor: total / n com duas casas, PARA BAIXO
-function parcela(totalCent, n) { return Math.floor(totalCent / n); }
-function maxParcelasOferecidas(precoCent, teto) { return Math.max(1, Math.min(teto, Math.floor(precoCent / LUMEN.minParcelaCentavos))); }
-function normNome(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
-function esc(x) { return String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-// Link vindo da API só é usado se for https. Escapar impede quebrar o atributo,
-// mas não impede um 'javascript:' de executar no clique.
-function urlSegura(u) { return /^https:\/\/[^\s"'<>]+$/i.test(String(u || '')) ? String(u) : ''; }
-function fmtData(iso) { if (!iso) return '—'; const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? m[3] + '/' + m[2] + '/' + m[1] : iso; }   // data pura: sem fuso
-function fmtHora(iso) { try { return new Date(iso).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }); } catch (e) { return iso; } }
-function mascaraCpf(el) { const d = el.value.replace(/\D/g, '').slice(0, 11); el.value = d.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2'); }
-function cpfValido(d) { if (!/^\d{11}$/.test(d) || /^(\d)\1{10}$/.test(d)) return false; const dv = (n) => { let s = 0; for (let i = 0; i < n - 1; i++) s += parseInt(d[i]) * (n - i); const r = (s * 10) % 11; return (r === 10 ? 0 : r) === parseInt(d[n - 1]); }; return dv(10) && dv(11); }
+let formato = 'presencial';
+const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const zap = msg => 'https://wa.me/' + RADIX_CURSOS.whatsapp + '?text=' + encodeURIComponent(msg || 'Olá! Quero saber dos isolados do Radix para 2027.');
 
-/* ---------- HTTP: lê o status antes de tentar JSON (401 vem sem corpo) ---------- */
-async function api(metodo, caminho, opts) {
-  opts = opts || {};
-  const h = { 'Accept': 'application/json' };
-  if (opts.body !== undefined) h['Content-Type'] = 'application/json';
-  if (opts.auth) h['Authorization'] = 'Bearer ' + estado.token;
-  if (opts.slug) h['X-Tenant-Slug'] = LUMEN.slug;
-  let r;
-  try { r = await fetch(LUMEN.proxy + caminho, { method: metodo, headers: h, body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined }); }
-  catch (e) { return { status: 0, data: null, rede: true }; }
-  const texto = await r.text();
-  let data = null;
-  if (texto && r.status !== 401) { try { data = JSON.parse(texto); } catch (e) { data = null; } }
-  return { status: r.status, data, texto };
-}
-// prefere uma mensagem do servidor se um dia existir; senão, a nossa
-function motivo(resp, padrao) { const m = resp && resp.data && typeof resp.data.message === 'string' && resp.data.message.trim(); return m || padrao; }
-
-/* ---------- sessão (mesma origem, sobrevive ao redirecionamento do cartão) ---------- */
-function guardar(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-function lerGuardado(k) { try { const v = sessionStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
-
-/* ---------- navegação ---------- */
-const SECOES = { 1: 'sec-catalogo', 2: 'sec-conta', 3: 'sec-aluno', 4: 'sec-pagamento', 5: 'sec-conf' };
-function irPara(n) {
-  Object.keys(SECOES).forEach(k => { document.getElementById(SECOES[k]).hidden = String(k) !== String(n); });
-  document.querySelectorAll('.passo').forEach(p => { const k = parseInt(p.getAttribute('data-p')); p.classList.toggle('on', k === n); p.classList.toggle('done', k < n); });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (n === 4) montarPagamento();
-}
-function setMsg(id, txt, tipo) { const el = document.getElementById(id); if (!el) return; el.textContent = txt || ''; el.className = 'msg' + (tipo ? ' ' + tipo : ''); }
-function atualizarCabecalho() {
-  const wrap = document.getElementById('wrap-conta');
-  const zap = document.getElementById('link-whats');
-  if (zap) zap.href = RADIX.zapUrl();
-  if (!estado.conta) { wrap.hidden = true; fecharMenus(); return; }
-  const nome = normNome(estado.conta.fullName) || estado.conta.email || '';
-  const partes = nome.split(' ').filter(Boolean);
-  document.getElementById('conta-iniciais').textContent = ((partes[0] || '?')[0] + (partes.length > 1 ? partes[partes.length - 1][0] : '')).toUpperCase();
-  document.getElementById('conta-primeiro').textContent = partes[0] || '';
-  document.getElementById('menu-nome').textContent = nome;
-  document.getElementById('menu-email').textContent = estado.conta.email || '';
-  wrap.hidden = false;
-}
-
-/* ---------- menus do cabeçalho ---------- */
-function fecharMenus(exceto) {
-  ['ajuda', 'conta'].forEach(m => {
-    if (m === exceto) return;
-    const menu = document.getElementById('menu-' + m), btn = document.getElementById(m === 'ajuda' ? 'btn-ajuda' : 'btn-conta-menu');
-    if (menu) menu.hidden = true;
-    if (btn) btn.setAttribute('aria-expanded', 'false');
-  });
-}
-function alternarMenu(m) {
-  const menu = document.getElementById('menu-' + m), btn = document.getElementById(m === 'ajuda' ? 'btn-ajuda' : 'btn-conta-menu');
-  const abrir = menu.hidden;
-  fecharMenus(abrir ? m : null);
-  menu.hidden = !abrir;
-  btn.setAttribute('aria-expanded', abrir ? 'true' : 'false');
-  if (abrir) { const alvo = menu.querySelector('button, a'); if (alvo) setTimeout(() => alvo.focus(), 10); }
-}
-document.addEventListener('click', e => { if (!e.target.closest('.menu-wrap')) fecharMenus(); });
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Escape') return;
-  if (document.getElementById('modal-root').innerHTML) { fecharModal(); return; }
-  fecharMenus();
-});
-
-/* ---------- telas do menu ---------- */
-function abrirModal(html) {
-  document.getElementById('modal-root').innerHTML = html;
-  const f = document.querySelector('#modal-root button, #modal-root a');
-  if (f) setTimeout(() => f.focus(), 30);
-}
-function fecharModal() { document.getElementById('modal-root').innerHTML = ''; }
-function _modal(titulo, corpo, acoes) {
-  return '<div class="modal-fundo" onclick="if(event.target===this)fecharModal()">' +
-    '<div class="modal-cx" role="dialog" aria-modal="true" aria-label="' + esc(titulo) + '">' +
-    '<h3>' + esc(titulo) + '</h3>' + corpo +
-    '<div class="acoes">' + (acoes || '') + '<button class="btn btn-ghost" onclick="fecharModal()">Fechar</button></div>' +
-    '</div></div>';
-}
-function abrirPerfil() {
-  const c = estado.conta || {};
-  abrirModal(_modal('Meu perfil',
-    '<p class="sub">Dados da sua conta na plataforma de pagamento. Nome e e-mail são definidos no cadastro.</p>' +
-    '<table class="dados"><tbody>' +
-    '<tr><th>Nome</th><td>' + esc(normNome(c.fullName) || '—') + '</td></tr>' +
-    '<tr><th>E-mail</th><td>' + esc(c.email || '—') + '</td></tr>' +
-    '<tr><th>Conta criada em</th><td>' + esc(c.createdAt ? fmtHora(c.createdAt) : 'não informado') + '</td></tr>' +
-    '</tbody></table>' +
-    '<p class="msg warn" style="margin-top:14px">A plataforma ainda não permite editar nome e e-mail por aqui, nem apagar a conta. Para qualquer correção, fale com o atendimento pelo WhatsApp.</p>',
-    '<a class="btn btn-sec" href="' + esc(RADIX.zapUrl('Olá! Preciso corrigir os dados da minha conta na página de matrícula.')) + '" target="_blank" rel="noopener">Falar com o atendimento</a>'));
-}
-function abrirPagamentos() {
-  const sec = document.getElementById('sec-pedidos');
-  if (!estado.token) { irPara(2); return; }
-  sec.hidden = false;
-  carregarPedidos();
-  sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-function abrirTrocarSenha() {
-  abrirModal(_modal('Trocar senha',
-    '<p class="sub">A plataforma de pagamento ainda não oferece troca de senha nem recuperação por e-mail. Enquanto isso não existir, a troca é feita pelo atendimento.</p>' +
-    '<p class="sub">Chame o atendimento pelo WhatsApp e a equipe orienta o procedimento. Não mande sua senha atual por mensagem: o atendimento do Radix nunca pede isso.</p>' +
-    '<p class="msg warn">Lembre que a senha desta página é separada da senha do app do Radix. Se você usou a mesma nos dois, troque a do app.</p>',
-    '<a class="btn btn-pri" href="' + esc(RADIX.zapUrl('Olá! Preciso trocar a senha da minha conta na página de matrícula.')) + '" target="_blank" rel="noopener">Falar com o atendimento</a>'));
-}
-function abrirComoFunciona() {
-  abrirModal(_modal('Como funciona a matrícula',
-    '<p class="sub">São cinco passos, na ordem:</p>' +
-    '<ol class="passos-txt">' +
-    '<li><b>Turma.</b> Escolha o horário que cabe na sua rotina. O valor é por aluno.</li>' +
-    '<li><b>Conta.</b> Crie uma conta ou entre na que você já tem. Ela guarda seus pedidos.</li>' +
-    '<li><b>Aluno.</b> Diga se o curso é para você ou para outra pessoa. A data de nascimento é sempre a do aluno.</li>' +
-    '<li><b>Pagamento.</b> PIX à vista ou cartão parcelado. Depois de gerar a cobrança não dá para trocar a forma sem falar com o atendimento, então confira o resumo.</li>' +
-    '<li><b>Confirmação.</b> Pague e espere nesta tela. A confirmação chega sozinha e a vaga fica garantida.</li>' +
-    '</ol>' +
-    '<p class="sub">A vaga fica reservada por tempo limitado enquanto o pagamento não cai. Se passar do prazo, é só refazer o pedido.</p>',
-    '<a class="btn btn-sec" href="' + esc(RADIX.zapUrl()) + '" target="_blank" rel="noopener">Falar com o atendimento</a>'));
-}
-function sair() { estado.token = null; estado.conta = null; guardar('lumen_token', null); guardar('lumen_cobranca', null); pararPoll(); atualizarCabecalho(); document.getElementById('sec-pedidos').hidden = true; irPara(1); }
-
-/* ---------- 1. catálogo ---------- */
-async function carregarCatalogo() {
-  const grid = document.getElementById('catalogo');
-  const r = await api('GET', '/storefront/' + encodeURIComponent(LUMEN.slug));
-  if (r.status !== 200 || !r.data) {
-    document.getElementById('catalogo-sub').textContent = '';
-    setMsg('catalogo-msg', r.rede ? 'Sem conexão com o servidor de matrículas. Tente de novo em instantes.' : r.status === 404 ? 'Loja não encontrada. Avise a escola.' : 'Não foi possível carregar as turmas agora (erro ' + r.status + ').', 'err');
-    return;
-  }
-  estado.turmas = Array.isArray(r.data.items) ? r.data.items : [];
-  if (!estado.turmas.length) { document.getElementById('catalogo-sub').textContent = 'Nenhuma turma disponível no momento.'; grid.innerHTML = ''; return; }
-  document.getElementById('catalogo-sub').textContent = 'Turmas com vagas abertas. O valor é por aluno.';
-  grid.innerHTML = estado.turmas.map(t => {
-    const preco = centavos(t.price);
-    const mod = { online: 'Online', in_person: 'Presencial', hybrid: 'Híbrido' }[t.modality] || (t.modality || '');
-    const pol = politicaDe(t);
-    const vendavel = pol.metodos.length > 0;
-    return '<div class="turma' + (estado.turma && estado.turma.listingId === t.listingId ? ' sel' : '') + '" data-id="' + esc(t.listingId) + '">' +
-      '<h3>' + esc(t.courseTitle) + '</h3>' +
-      '<div class="meta">' + esc(mod) + (t.schedule ? ' · ' + esc(t.schedule) : '') + (t.startsOn ? '<br>Início em ' + fmtData(t.startsOn) : '') + '<br>Professor: ' + esc(t.taughtBy || '') + '</div>' +
-      '<div class="preco">' + brl(preco) + (pol.maxParcelas > 1 && pol.metodos.includes('card') ? '<br><small>ou até ' + pol.maxParcelas + 'x de ' + brl(parcela(preco, pol.maxParcelas)) + ' no cartão</small>' : '') + '</div>' +
-      (vendavel ? '<button class="btn btn-pri" onclick="escolherTurma(\'' + esc(t.listingId) + '\')">Escolher esta turma</button>'
-                : '<button class="btn btn-sec" disabled>Indisponível para venda no momento</button>') +
-      '</div>';
+function render() {
+  const grade = document.getElementById('grade');
+  grade.innerHTML = RADIX_CURSOS.cursos.map(c => {
+    const url = c.url && c.url[formato];
+    const preco = c.precos[formato];
+    const aberto = !!url;
+    const destino = aberto ? url : zap('Olá! Quero ser avisado quando abrir a matrícula do isolado de ' + c.nome + ' (' + formato + ') em 2027.');
+    return `
+    <article class="card ${c.classe} ${aberto ? '' : 'is-soon'}">
+      <div class="card-hero">
+        <span class="badge ${aberto ? '' : 'soon'}">${aberto ? 'Matrículas abertas' : 'Em breve'}</span>
+        <img src="${esc(c.foto)}" alt="${esc(c.prof)}" loading="lazy" width="480" height="560">
+        <div class="hero-txt">
+          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${GLIFOS[c.id]}</svg></div>
+          <span class="area">${esc(c.area)}</span>
+          <h3>${esc(c.nome)}</h3>
+          <p class="quem">com<b>${esc(c.prof)}</b></p>
+        </div>
+      </div>
+      <ul>${c.itens.map(i => `<li>${CHECK}<span>${esc(i)}</span></li>`).join('')}</ul>
+      <div class="card-foot">
+        <div class="price"><small>${formato === 'presencial' ? 'Presencial' : 'Online'}</small>${preco == null ? '<b class="tbd">valor a definir</b>' : '<b>' + brl(preco) + '</b>'}</div>
+        <a class="btn btn-curso" href="${esc(destino)}" ${aberto ? '' : 'target="_blank" rel="noopener"'}>${aberto ? 'Matricular' : 'Avise-me'} ${SETA}</a>
+      </div>
+    </article>`;
   }).join('');
 }
-// política de pagamento vem da API quando existir; teste é "a chave existe", não "é falsy"
-function politicaDe(t) {
-  const metodosAceitos = ('acceptedMethods' in t) ? (Array.isArray(t.acceptedMethods) ? t.acceptedMethods : []) : LUMEN.fallbackMetodos;
-  const teto = ('maxCardInstallments' in t) ? (Number.isInteger(t.maxCardInstallments) ? t.maxCardInstallments : 0) : LUMEN.fallbackMaxParcelas;
-  const metodos = metodosAceitos.filter(m => LUMEN.metodosRenderizaveis.includes(m));   // interseção com o que sabemos mostrar
-  const preco = centavos(t.price) || 0;
-  return { metodos, teto, maxParcelas: maxParcelasOferecidas(preco, teto), politicaDaApi: ('acceptedMethods' in t) };
-}
-function escolherTurma(id) {
-  estado.turma = estado.turmas.find(t => t.listingId === id) || null;
-  if (!estado.turma) return;
-  document.querySelectorAll('.turma').forEach(el => el.classList.toggle('sel', el.getAttribute('data-id') === id));
-  if (estado.token && estado.conta) irPara(3); else irPara(2);
-}
 
-/* ---------- 2. conta ---------- */
-let modoAtual = 'criar';
-function modoConta(m) {
-  modoAtual = m;
-  document.getElementById('aba-criar').classList.toggle('on', m === 'criar');
-  document.getElementById('aba-entrar').classList.toggle('on', m === 'entrar');
-  document.getElementById('campo-nome').hidden = m !== 'criar';
-  document.getElementById('conta-senha').setAttribute('autocomplete', m === 'criar' ? 'new-password' : 'current-password');
-  setMsg('conta-msg', '');
-}
-async function enviarConta() {
-  const nome = normNome(document.getElementById('conta-nome').value);
-  const email = document.getElementById('conta-email').value.trim().toLowerCase();
-  const senha = document.getElementById('conta-senha').value;
-  if (!email || !senha || (modoAtual === 'criar' && !nome)) { setMsg('conta-msg', modoAtual === 'criar' ? 'Preencha nome, e-mail e senha.' : 'Preencha e-mail e senha.', 'err'); return; }
-  const btn = document.getElementById('btn-conta'); btn.disabled = true; setMsg('conta-msg', modoAtual === 'criar' ? 'Criando sua conta…' : 'Entrando…');
-  const r = modoAtual === 'criar'
-    ? await api('POST', '/auth/register', { body: { email, password: senha, fullName: nome } })
-    : await api('POST', '/auth/login', { body: { email, password: senha } });
-  btn.disabled = false;
-  if (r.rede) { setMsg('conta-msg', 'Sem conexão com o servidor. Tente de novo.', 'err'); return; }
-  if (modoAtual === 'criar' && r.status === 409) {
-    // nunca tentar login escondido com a mesma senha
-    modoConta('entrar'); document.getElementById('conta-email').value = email;
-    setMsg('conta-msg', 'Este e-mail já tem conta. Entre com a sua senha para continuar.', 'warn'); return;
-  }
-  if (modoAtual === 'entrar' && r.status === 401) { setMsg('conta-msg', 'E-mail ou senha incorretos.', 'err'); return; }
-  if (!(r.status === 200 || r.status === 201) || !r.data || !r.data.token) { setMsg('conta-msg', motivo(r, 'Não foi possível concluir agora (erro ' + r.status + ').'), 'err'); return; }
-  estado.token = r.data.token; guardar('lumen_token', estado.token);
-  await carregarConta();
-  document.getElementById('conta-senha').value = '';
-  if (!estado.conta) { setMsg('conta-msg', 'Conta criada, mas não conseguimos confirmar a sessão. Tente entrar de novo.', 'err'); return; }
-  setMsg('conta-msg', '');
-  carregarPedidos();
-  irPara(estado.turma ? 3 : 1);
-}
-async function carregarConta() {
-  if (!estado.token) return;
-  const r = await api('GET', '/me', { auth: true });
-  if (r.status === 200 && r.data) { estado.conta = r.data; }
-  else if (r.status === 401) { estado.token = null; estado.conta = null; guardar('lumen_token', null); }
-  atualizarCabecalho();
-}
+document.getElementById('dots').innerHTML = RADIX_CURSOS.cursos.map(c => `<span class="${c.classe}"><i></i>${esc(c.nome)}</span>`).join('');
 
-/* ---------- 3. aluno ---------- */
-function quemEstuda() {
-  const outro = document.querySelector('input[name=quem]:checked').value === 'outro';
-  document.getElementById('rad-eu').classList.toggle('on', !outro);
-  document.getElementById('rad-outro').classList.toggle('on', outro);
-  document.getElementById('campo-aluno-nome').hidden = !outro;
-}
-function confirmarAluno() {
-  const outro = document.querySelector('input[name=quem]:checked').value === 'outro';
-  const nome = outro ? normNome(document.getElementById('aluno-nome').value) : normNome(estado.conta && estado.conta.fullName);
-  const nasc = document.getElementById('aluno-nasc').value;   // 'AAAA-MM-DD', sem fuso
-  if (!nome) { setMsg('aluno-msg', outro ? 'Informe o nome completo do aluno.' : 'Sua conta não tem nome cadastrado. Informe o nome do aluno em "Para outra pessoa".', 'err'); return; }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(nasc)) { setMsg('aluno-msg', 'Informe a data de nascimento do aluno.', 'err'); return; }
-  estado.aluno = { fullName: nome, birthDate: nasc, mesmo: !outro };
-  setMsg('aluno-msg', '');
-  irPara(4);
-}
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  formato = b.dataset.formato;
+  document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  render();
+}));
 
-/* ---------- 4. pagamento ---------- */
-function montarPagamento() {
-  const t = estado.turma; if (!t) { irPara(1); return; }
-  const pol = politicaDe(t);
-  const box = document.getElementById('metodos');
-  if (!pol.metodos.length) {
-    box.innerHTML = '<p class="msg warn">Esta turma não aceita nenhuma forma de pagamento que esta página consegue oferecer no momento. Fale com o atendimento.</p>';
-    estado.metodo = null; document.getElementById('btn-pagar').disabled = true; resumo(); return;
-  }
-  if (!estado.metodo || !pol.metodos.includes(estado.metodo)) estado.metodo = pol.metodos[0];
-  box.innerHTML = pol.metodos.map(m => '<button class="btn btn-sec' + (m === estado.metodo ? ' on' : '') + '" onclick="escolherMetodo(\'' + m + '\')">' + LUMEN.nomes[m] + '</button>').join('');
-  document.getElementById('btn-pagar').disabled = false;
-  escolherMetodo(estado.metodo);
-}
-function escolherMetodo(m) {
-  estado.metodo = m;
-  estado.parcelas = null;   // troca de método zera o parcelamento sempre
-  document.querySelectorAll('#metodos button').forEach(b => b.classList.toggle('on', b.textContent === LUMEN.nomes[m]));
-  const pol = politicaDe(estado.turma), preco = centavos(estado.turma.price) || 0;
-  const campo = document.getElementById('campo-parcelas'), sel = document.getElementById('parcelas');
-  if (m === 'card') {
-    campo.hidden = false;
-    const max = pol.maxParcelas;
-    sel.innerHTML = Array.from({ length: max }, (_, i) => i + 1).map(n => '<option value="' + n + '">' + n + 'x de ' + brl(parcela(preco, n)) + (n === 1 ? ' (à vista)' : '') + '</option>').join('');
-    sel.value = '1'; estado.parcelas = 1;
-    document.getElementById('parcelas-nota').textContent = pol.politicaDaApi ? 'Limite definido pela escola: até ' + max + 'x.' : 'Limite provisório de ' + max + 'x até a escola configurar o parcelamento.';
-    sel.onchange = () => { estado.parcelas = parseInt(sel.value, 10) || 1; resumo(); };
-  } else { campo.hidden = true; }
-  resumo();
-}
-function resumo() {
-  const t = estado.turma; if (!t) return;
-  const preco = centavos(t.price);
-  let pg = '—';
-  if (estado.metodo === 'card') pg = (estado.parcelas || 1) + 'x de ' + brl(parcela(preco, estado.parcelas || 1)) + ' no cartão';
-  else if (estado.metodo) pg = LUMEN.nomes[estado.metodo] + ' à vista';
-  document.getElementById('resumo').innerHTML =
-    '<b>' + esc(t.courseTitle) + '</b>' + (t.schedule ? ' · ' + esc(t.schedule) : '') + '<br>' +
-    'Aluno: <b>' + esc(estado.aluno ? estado.aluno.fullName : '') + '</b>' + (estado.aluno && estado.aluno.mesmo ? ' (você)' : '') + '<br>' +
-    'Total: <b>' + brl(preco) + '</b> · ' + esc(pg) + '<br>' +
-    '<span style="color:var(--radix-text-muted)">Ao confirmar, a vaga é reservada por tempo limitado e a cobrança é gerada nesta forma. Não é possível trocar depois sem falar com o atendimento.</span>';
-}
-async function confirmarPagamento() {
-  const t = estado.turma, a = estado.aluno; if (!t || !a || !estado.token) { irPara(1); return; }
-  const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
-  if (!cpfValido(cpf)) { setMsg('pag-msg', 'Informe um CPF válido.', 'err'); return; }
-  if (!estado.metodo) { setMsg('pag-msg', 'Escolha a forma de pagamento.', 'err'); return; }
-  const pol = politicaDe(t), preco = centavos(t.price);
-  if (estado.metodo === 'card') {
-    const n = estado.parcelas || 1;
-    if (n < 1 || n > pol.maxParcelas || parcela(preco, n) < LUMEN.minParcelaCentavos) { setMsg('pag-msg', 'Parcelamento fora do permitido. Escolha outro número de parcelas.', 'err'); return; }
-  }
-  const btn = document.getElementById('btn-pagar'); btn.disabled = true;
+document.querySelectorAll('[data-zap]').forEach(a => {
+  a.href = zap(a.dataset.zap || ''); a.target = '_blank'; a.rel = 'noopener';
+});
 
-  // 5) checkout: reserva a vaga (sempre newStudent; a API casa nome + nascimento)
-  if (!estado.pedido) {
-    setMsg('pag-msg', 'Reservando sua vaga…');
-    estado.pedidoReq = { items: [{ listingId: t.listingId, newStudent: { fullName: a.fullName, birthDate: a.birthDate } }] };
-    const r = await api('POST', '/checkout', { body: estado.pedidoReq, auth: true, slug: true });
-    if (r.status === 401) { btn.disabled = false; setMsg('pag-msg', 'Sua sessão expirou. Entre de novo.', 'err'); estado.token = null; estado.conta = null; guardar('lumen_token', null); atualizarCabecalho(); irPara(2); return; }
-    if (r.status === 422) {
-      btn.disabled = false;
-      // pode ser turma lotada: reconfere o catálogo antes de falar em "dados inválidos"
-      await carregarCatalogo();
-      const aindaExiste = estado.turmas.some(x => x.listingId === t.listingId);
-      setMsg('pag-msg', aindaExiste
-        ? 'Não foi possível reservar a vaga. A turma pode ter lotado agora. Volte e escolha outra turma; se o problema continuar, fale com o atendimento.'
-        : 'Esta turma acabou de esgotar. Volte e escolha outra turma.', 'err');
-      return;
-    }
-    if (r.status !== 201 || !r.data || !Array.isArray(r.data.orders) || !r.data.orders.length) {
-      btn.disabled = false; setMsg('pag-msg', motivo(r, r.rede ? 'Sem conexão com o servidor. Tente de novo.' : 'Não foi possível reservar agora (erro ' + r.status + ').'), 'err'); return;
-    }
-    // orders é uma lista: um pedido por loja vendedora; aqui só há uma
-    const pedidos = r.data.orders;
-    estado.pedido = pedidos.find(p => (p.items || []).some(i => i.listingId === t.listingId)) || pedidos[0];
-    estado.pedido._todos = pedidos.map(p => p.id);
-  }
+document.getElementById('tema').addEventListener('click', () => {
+  const atual = document.documentElement.dataset.theme
+    || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  const novo = atual === 'light' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = novo;
+  try { localStorage.setItem('radix-cursos-theme', novo); } catch (e) {}
+});
 
-  // 6) cobrança (idempotente por retomada: repetir o MESMO pedido devolve a mesma cobrança)
-  estado.cobrancaReq = { method: estado.metodo, installmentCount: estado.metodo === 'card' ? (estado.parcelas || 1) : null, cpfCnpj: cpf };
-  setMsg('pag-msg', 'Gerando o pagamento…');
-  const ok = await criarCobranca();
-  btn.disabled = false;
-  if (ok) { setMsg('pag-msg', ''); irPara(5); }
-}
-async function criarCobranca() {
-  const r = await api('POST', '/orders/' + encodeURIComponent(estado.pedido.id) + '/charges', { body: estado.cobrancaReq, auth: true, slug: true });
-  if (r.status === 201 || r.status === 200) {
-    estado.cobranca = r.data;
-    // Guarda os dados de pagamento (QR, copia e cola, links). O guia manda recuperá-los
-    // repetindo o POST, mas nesta versão da API o POST repetido devolve 409 em vez de 200
-    // (conferido em 14/09/2026), e um GET na cobrança devolve os campos nulos. Guardar aqui
-    // é o que faz o QR sobreviver a um recarregamento ou à volta do cartão.
-    // Sem CPF: dado pessoal não é guardado no navegador.
-    guardar('lumen_cobranca', {
-      pedidoId: estado.pedido.id, cobrancaId: r.data.id, turma: estado.turma, expiresAt: estado.pedido.expiresAt,
-      req: Object.assign({}, estado.cobrancaReq, { cpfCnpj: undefined }),
-      dados: { id: r.data.id, method: r.data.method, amount: r.data.amount, status: r.data.status, dueDate: r.data.dueDate,
-               invoiceUrl: r.data.invoiceUrl, pixPayload: r.data.pixPayload, pixQrCode: r.data.pixQrCode, bankSlipUrl: r.data.bankSlipUrl }
-    });
-    mostrarConfirmacao(); return true;
-  }
-  if (r.status === 502) { setMsg('pag-msg', 'O provedor de pagamento não respondeu. Tente de novo em instantes; repetir é seguro e não gera cobrança dupla.', 'warn'); return false; }
-  if (r.status === 422) { setMsg('pag-msg', 'Esta forma de pagamento ou parcelamento não foi aceita para esta turma. Escolha outra opção.', 'err'); console.warn('[vendas] 422 na cobrança: revisar regras da interface', { method: estado.cobrancaReq.method, installmentCount: estado.cobrancaReq.installmentCount }); return false; }
-  if (r.status === 409) { await tratar409(); return false; }
-  if (r.status === 401) { setMsg('pag-msg', 'Sua sessão expirou. Entre de novo.', 'err'); estado.token = null; estado.conta = null; guardar('lumen_token', null); atualizarCabecalho(); irPara(2); return false; }
-  setMsg('pag-msg', motivo(r, r.rede ? 'Sem conexão com o servidor. Tente de novo.' : 'Não foi possível gerar o pagamento (erro ' + r.status + ').'), 'err');
-  return false;
-}
-// 409 tem três causas e nenhuma mensagem: olha o status do pedido
-async function tratar409() {
-  const r = await api('GET', '/orders', { auth: true });
-  const p = r.status === 200 && Array.isArray(r.data) ? r.data.find(x => x.id === estado.pedido.id) : null;
-  const st = p ? p.status : null;
-  if (st === 'paid') { estado.pedido = p; mostrarSucesso('Este pedido já está pago.'); irPara(5); return; }
-  if (st === 'cancelled') { estado.pedido = null; setMsg('pag-msg', 'A reserva desta vaga expirou. Confirme de novo para reservar outra vez.', 'warn'); return; }
-  setMsg('pag-msg', 'Já existe um pagamento em andamento para este pedido com outra forma ou parcelamento, ou o recebimento ainda não está liberado para esta turma. Se você gerou um pagamento antes, use "Retomar pagamento"; caso contrário, fale com o atendimento.', 'warn');
-  const acoes = document.querySelector('#sec-pagamento .acoes');
-  if (!document.getElementById('btn-retomar')) {
-    const b = document.createElement('button'); b.id = 'btn-retomar'; b.className = 'btn btn-sec'; b.textContent = 'Retomar pagamento';
-    b.onclick = retomarGuardado; acoes.insertBefore(b, acoes.firstChild.nextSibling);
-  }
-}
-
-/* ---------- 5. confirmação, entrega por método e acompanhamento ---------- */
-function mostrarConfirmacao() {
-  const c = estado.cobranca, t = estado.turma; if (!c) return;
-  const corpo = document.getElementById('conf-corpo'), acoes = document.getElementById('conf-acoes');
-  document.getElementById('conf-titulo').textContent = c.method === 'pix' ? 'Pague com PIX' : c.method === 'boleto' ? 'Boleto gerado' : 'Pagamento com cartão';
-  document.getElementById('conf-sub').textContent = (t ? t.courseTitle + ' · ' : '') + brl(centavos(c.amount)) + (c.dueDate ? ' · vencimento ' + fmtData(c.dueDate) : '') + (estado.pedido && estado.pedido.expiresAt ? ' · vaga reservada até ' + fmtHora(estado.pedido.expiresAt) : '');
-  acoes.innerHTML = '';
-  if (c.method === 'pix') {
-    // O QR vem da API em base64. NÃO concatenar no atributo: vai por propriedade,
-    // depois de conferir que só tem caracteres de base64.
-    const qr = /^[A-Za-z0-9+/=\s]+$/.test(String(c.pixQrCode || '')) ? String(c.pixQrCode).replace(/\s/g, '') : '';
-    corpo.innerHTML = '<div class="pix">' + (qr ? '<img id="pix-qr" alt="QR code do PIX">' : '<div></div>') +
-      '<div><p class="sub">Escaneie o QR code no aplicativo do banco ou copie o código abaixo e cole em "PIX copia e cola". No celular, use o código.</p>' +
-      '<textarea id="pix-copia" readonly>' + esc(c.pixPayload || '') + '</textarea>' +
-      '<div class="acoes"><button class="btn btn-pri btn-sm" onclick="copiarPix()">Copiar código PIX</button></div></div></div>';
-    const img = document.getElementById('pix-qr');
-    if (img && qr) img.src = 'data:image/png;base64,' + qr;
-    iniciarPoll();
-  } else if (c.method === 'boleto') {
-    const link = urlSegura(c.bankSlipUrl);
-    corpo.innerHTML = '<p class="sub">Abra o boleto, pague no banco ou no aplicativo e aguarde a confirmação. A vaga é confirmada quando o pagamento compensar.</p>' + (link ? '<a class="btn btn-pri" href="' + esc(link) + '" target="_blank" rel="noopener">Abrir boleto</a>' : '<p class="msg warn">Link do boleto indisponível. Use "Recuperar dados do pagamento".</p>');
-    iniciarPoll();
-  } else {
-    const link = urlSegura(c.invoiceUrl);
-    corpo.innerHTML = '<p class="sub">Você vai para a página segura do provedor para digitar os dados do cartão. Ao terminar, volte para esta página: o pagamento é confirmado automaticamente.</p>' +
-      (link ? '<a class="btn btn-pri" id="link-cartao" href="' + esc(link) + '" rel="noopener">Ir para o pagamento com cartão</a>' : '<p class="msg warn">Link do cartão indisponível. Use "Recuperar dados do pagamento".</p>');
-    // a cobrança já está guardada em sessionStorage antes de qualquer redirecionamento
-    iniciarPoll();
-  }
-  acoes.innerHTML = '<button class="btn btn-ghost btn-sm" onclick="retomarGuardado()">Recuperar dados do pagamento</button><button class="btn btn-ghost btn-sm" onclick="carregarPedidos();document.getElementById(\'sec-pedidos\').hidden=false;document.getElementById(\'sec-pedidos\').scrollIntoView({behavior:\'smooth\'})">Ver meus pedidos</button>';
-}
-function copiarPix() { const ta = document.getElementById('pix-copia'); ta.select(); try { navigator.clipboard.writeText(ta.value); setMsg('conf-msg', 'Código copiado.', 'ok'); } catch (e) { document.execCommand('copy'); setMsg('conf-msg', 'Código selecionado: use Ctrl+C.', 'ok'); } }
-function setStatusPg(txt, spinner) { document.getElementById('conf-status').innerHTML = (spinner ? '<span class="spinner"></span>' : '') + '<span>' + esc(txt) + '</span>'; }
-function iniciarPoll() {
-  pararPoll(); estado.pollInicio = Date.now();
-  setStatusPg('Aguardando a confirmação do pagamento…', true);
-  const passo = async () => {
-    if (!estado.cobranca) return;
-    const r = await api('GET', '/charges/' + encodeURIComponent(estado.cobranca.id), { auth: true });
-    if (r.status === 200 && r.data && r.data.status) {
-      const st = r.data.status;
-      if (st === 'paid' || st === 'confirmed') { pararPoll(); mostrarSucesso(); return; }
-      if (st === 'overdue') { pararPoll(); setStatusPg('O prazo deste pagamento venceu.', false); setMsg('conf-msg', 'Você pode gerar um novo pedido escolhendo a turma de novo.', 'warn'); return; }
-      if (st === 'failed') { pararPoll(); setStatusPg('Este pagamento foi cancelado.', false); setMsg('conf-msg', 'Escolha a turma de novo para gerar um novo pedido.', 'warn'); return; }
-      if (st === 'refunded') { pararPoll(); setStatusPg('Este pagamento foi estornado.', false); return; }
-      // pending ou valor desconhecido: continua
-    } else if (r.status === 401) { pararPoll(); setStatusPg('Sessão expirada. Entre de novo para acompanhar.', false); return; }
-    // falha passageira (rede, 5xx): ignora e segue
-    if (Date.now() - estado.pollInicio > LUMEN.pollMaxMs) { pararPoll(); setStatusPg('Ainda processando. Assim que o pagamento compensar, sua matrícula é ativada e você recebe um e-mail.', false); return; }
-    estado.pollTimer = setTimeout(passo, LUMEN.pollMs);
-  };
-  estado.pollTimer = setTimeout(passo, LUMEN.pollMs);
-}
-function pararPoll() { if (estado.pollTimer) { clearTimeout(estado.pollTimer); estado.pollTimer = null; } }
-function mostrarSucesso(txt) {
-  setStatusPg(txt || 'Pagamento confirmado. Sua vaga está garantida.', false);
-  document.getElementById('conf-status').style.color = 'var(--radix-success)';
-  setMsg('conf-msg', 'A matrícula aparece em "Meus pedidos e matrículas" assim que o sistema terminar de processar.', 'ok');
-  guardar('lumen_cobranca', null);
-  carregarPedidos();
-}
-// Recupera o pagamento em andamento (recarregou a página, voltou do cartão).
-// 1º) usa o que foi guardado no navegador, que é o único caminho que funciona hoje;
-// 2º) confere o status atual no servidor;
-// 3º) só se não houver nada guardado tenta a retomada por POST descrita no guia —
-//     nesta versão da API ela devolve 409, mas volta a funcionar quando corrigirem.
-async function retomarGuardado() {
-  const g = lerGuardado('lumen_cobranca');
-  if (!g || !estado.token) { setMsg('conf-msg', 'Não há pagamento em andamento nesta sessão.', 'warn'); setMsg('pag-msg', 'Não há pagamento em andamento nesta sessão.', 'warn'); return; }
-  estado.pedido = estado.pedido || { id: g.pedidoId, expiresAt: g.expiresAt };
-  estado.turma = estado.turma || g.turma;
-  if (g.dados && g.dados.id) {
-    estado.cobranca = g.dados;
-    const st = await api('GET', '/charges/' + encodeURIComponent(g.dados.id), { auth: true });
-    if (st.status === 200 && st.data && st.data.status) estado.cobranca.status = st.data.status;   // o GET traz o status, nunca os dados de pagamento
-    irPara(5); mostrarConfirmacao();
-    if (['paid', 'confirmed'].includes(estado.cobranca.status)) { pararPoll(); mostrarSucesso(); }
-    return;
-  }
-  const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
-  const req = Object.assign({}, g.req); delete req.cpfCnpj;
-  if (cpf) req.cpfCnpj = cpf;   // só é exigido enquanto o pagador não tem CPF gravado
-  estado.cobrancaReq = req;
-  const r = await api('POST', '/orders/' + encodeURIComponent(g.pedidoId) + '/charges', { body: req, auth: true, slug: true });
-  if (r.status === 200 || r.status === 201) { estado.cobranca = r.data; irPara(5); mostrarConfirmacao(); return; }
-  if (r.status === 409) { await tratar409(); irPara(4); return; }
-  setMsg('conf-msg', 'Não foi possível recuperar o pagamento (erro ' + r.status + ').', 'err');
-}
-
-/* ---------- meus pedidos ---------- */
-async function carregarPedidos() {
-  if (!estado.token) return;
-  const sec = document.getElementById('sec-pedidos'), box = document.getElementById('pedidos');
-  const [rp, re] = await Promise.all([api('GET', '/orders', { auth: true }), api('GET', '/enrollments', { auth: true })]);
-  const pedidos = rp.status === 200 && Array.isArray(rp.data) ? rp.data : [];
-  const mats = re.status === 200 && Array.isArray(re.data) ? re.data : [];
-  sec.hidden = false;
-  if (!pedidos.length) { box.innerHTML = '<p class="sub">Nenhum pedido ainda.</p>'; return; }
-  const nomeTurma = id => { const t = estado.turmas.find(x => x.listingId === id); return t ? t.courseTitle : id; };
-  const stPedido = { pending: 'Aguardando pagamento', paid: 'Pago', partially_paid: 'Pagamento incompleto', cancelled: 'Cancelado' };
-  const stMat = { reserved: 'Vaga reservada', active: 'Matrícula ativa', completed: 'Concluída', cancelled: 'Cancelada' };
-  box.innerHTML = '<table><thead><tr><th>Turma</th><th>Total</th><th>Pedido</th><th>Matrícula</th><th>Quando</th></tr></thead><tbody>' +
-    pedidos.map(p => (p.items || []).map(i => {
-      const m = mats.find(x => x.id === i.enrollmentId || (x.listingId === i.listingId && x.studentId === i.studentId));
-      return '<tr><td>' + esc(nomeTurma(i.listingId)) + '</td><td>' + brl(centavos(p.total)) + '</td><td>' + esc(stPedido[p.status] || p.status) + '</td><td>' + esc(m ? (stMat[m.status] || m.status) : '—') + '</td><td class="mono">' + esc(p.expiresAt ? 'reserva até ' + fmtHora(p.expiresAt) : '') + '</td></tr>';
-    }).join('')).join('') + '</tbody></table>';
-}
-
-/* ---------- testes de unidade das regras que a beta não exercita ---------- */
-function testes() {
-  const r = [];
-  const t = (nome, ok) => r.push((ok ? 'ok  ' : 'FALHA ') + nome);
-  t('centavos("300.00") = 30000', centavos('300.00') === 30000);
-  t('centavos("100.5") = 10050', centavos('100.5') === 10050);
-  t('centavos("0.1")+centavos("0.2") = 30', centavos('0.1') + centavos('0.2') === 30);
-  t('centavos(300) rejeita número', centavos(300) === 30000 || centavos('300') === 30000);
-  t('brl(30000) = R$ 300,00', brl(30000) === 'R$ 300,00');
-  t('brl(1234567) = R$ 12.345,67', brl(1234567) === 'R$ 12.345,67');
-  t('parcela(30000, 7) arredonda para baixo (4285)', parcela(30000, 7) === 4285);
-  t('R$ 300 com teto 10 -> 10x', maxParcelasOferecidas(30000, 10) === 10);
-  t('R$ 100 com teto 21 -> 20x (piso de R$ 5)', maxParcelasOferecidas(10000, 21) === 20);
-  t('R$ 3 com teto 10 -> 1x (nunca 0)', maxParcelasOferecidas(300, 10) === 1);
-  t('política ausente usa fallback', JSON.stringify(politicaDe({ price: '300.00' }).metodos) === JSON.stringify(['pix', 'card']));
-  t('acceptedMethods vazio falha fechado', politicaDe({ price: '300.00', acceptedMethods: [] }).metodos.length === 0);
-  t('maxCardInstallments 0 não vira fallback', politicaDe({ price: '300.00', acceptedMethods: ['card'], maxCardInstallments: 0 }).maxParcelas === 1 && politicaDe({ price: '300.00', acceptedMethods: ['card'], maxCardInstallments: 0 }).teto === 0);
-  t('método desconhecido é ignorado', JSON.stringify(politicaDe({ price: '300.00', acceptedMethods: ['pix', 'pix_automatico'] }).metodos) === JSON.stringify(['pix']));
-  t('normNome colapsa espaços', normNome('  Maria   Silva ') === 'Maria Silva');
-  t('cpfValido aceita 529.982.247-25', cpfValido('52998224725'));
-  t('cpfValido recusa 111.111.111-11', !cpfValido('11111111111'));
-  t('fmtData não aplica fuso', fmtData('1990-04-12') === '12/04/1990');
-  return r;
-}
-
-/* ---------- inicialização ---------- */
-(async function boot() {
-  document.getElementById('rodape-amb').textContent = 'loja ' + LUMEN.slug + ' · sandbox';
-  document.getElementById('rodape-whats').href = RADIX.zapUrl();
-  document.getElementById('link-whats').href = RADIX.zapUrl();
-  estado.token = lerGuardado('lumen_token');
-  await Promise.all([carregarCatalogo(), carregarConta()]);
-  if (estado.conta) carregarPedidos();
-  const g = lerGuardado('lumen_cobranca');
-  if (estado.conta && g && g.cobrancaId) {
-    // voltou do cartão ou recarregou com pagamento em andamento: recupera pela retomada
-    estado.turma = g.turma || null; estado.pedido = { id: g.pedidoId, expiresAt: g.expiresAt };
-    await retomarGuardado();
-  } else { irPara(1); }
-  if (/[?&]teste=1/.test(location.search)) console.log(testes().join('\n'));
-})();
+render();
 </script>
 </body>
 </html>
