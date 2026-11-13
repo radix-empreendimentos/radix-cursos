@@ -111,18 +111,11 @@
   .hero-facts div b { display: block; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; }
   .hero-facts div span { font-size: 13px; color: var(--muted); }
 
-  /* ---------- seletor de formato ---------- */
+  /* ---------- seções ---------- */
   section { padding: 56px 0; }
   .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
   .sec-head h2 { font-size: clamp(28px, 3.6vw, 42px); font-weight: 800; line-height: 1.05; }
   .sec-head p { color: var(--muted); max-width: 48ch; margin-top: 8px; }
-  .seg { display: inline-flex; padding: 4px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
-  .seg button {
-    border: 0; background: transparent; color: var(--text-2); font: 600 14px 'Inter', sans-serif;
-    padding: 10px 18px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-  }
-  .seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
-  .seg button svg { width: 16px; height: 16px; }
 
   /* ---------- cards de curso ---------- */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
@@ -151,7 +144,7 @@
     filter: drop-shadow(0 10px 18px rgba(0,0,0,.28)); transition: transform .3s ease;
   }
   .card:hover .card-hero img { transform: scale(1.03); transform-origin: right bottom; }
-  .hero-txt { position: relative; z-index: 1; max-width: 50%; }
+  .hero-txt { position: relative; z-index: 1; max-width: 46%; }
   .glyph {
     width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 10px;
     background: color-mix(in srgb, var(--c) 20%, transparent); color: var(--c);
@@ -168,6 +161,8 @@
   .price small { display: block; font-size: 11.5px; color: var(--muted); }
   .price b { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; }
   .price .tbd { font-size: 15px; font-weight: 600; color: var(--text-2); font-family: 'Inter', sans-serif; }
+  .card-foot { flex-wrap: wrap; }
+  .price-det { flex-basis: 100%; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
   .card .btn { padding: 10px 16px; font-size: 14px; }
   .btn-curso { background: var(--c); color: #0f1311; }
   .btn-curso:hover { filter: brightness(1.08); }
@@ -232,13 +227,6 @@
   footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: center; }
   footer p { font-size: 13px; color: var(--muted); }
 
-  /* ---------- faixa de esboço ---------- */
-  .draft {
-    background: repeating-linear-gradient(-45deg, var(--raiz) 0 10px, color-mix(in srgb, var(--raiz) 80%, #000) 10px 20px);
-    color: var(--raiz-tx); font-size: 12.5px; font-weight: 700; text-align: center; padding: 6px 12px;
-  }
-  .draft span { background: var(--raiz); padding: 2px 8px; border-radius: 4px; }
-
   @media (max-width: 820px) {
     nav.links { display: none; }
     header.top .wrap { gap: 10px; }
@@ -252,7 +240,6 @@
     .wrap { padding: 0 16px; }
     .grid { grid-template-columns: 1fr; }
     .top .btn-raiz span { display: none; }
-    .seg { width: 100%; } .seg button { flex: 1; justify-content: center; padding: 10px 8px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
@@ -262,8 +249,6 @@
   // Tema salvo (sem piscar). Chave própria, separada do app.
   try { var t = localStorage.getItem('radix-cursos-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
-
-<div class="draft"><span>ESBOÇO — valores, datas e links de compra a definir</span></div>
 
 <header class="top">
   <div class="wrap">
@@ -279,7 +264,7 @@
     <nav class="links" aria-label="Seções">
       <a href="#cursos">Isolados</a>
       <a href="#como">Como funciona</a>
-      <a href="#formatos">Presencial e online</a>
+      <a href="#formatos">Onde e como</a>
       <a href="#duvidas">Dúvidas</a>
     </nav>
     <button class="icon-btn" id="tema" type="button" aria-label="Alternar tema claro e escuro">
@@ -305,7 +290,7 @@
     <div class="wrap">
       <span class="kicker">Isolados ENEM 2027</span>
       <h1>Cada matéria com <em>quem entende</em> dela.</h1>
-      <p class="lead">Sete cursos isolados, sete professores de Mossoró. Monte a sua preparação para o ENEM do jeito que você precisa: uma matéria, algumas ou todas, na sala de aula ou de casa.</p>
+      <p class="lead">Sete cursos isolados, sete professores, aulas presenciais em Mossoró. Monte a sua preparação para o ENEM do jeito que você precisa: uma matéria, algumas ou todas.</p>
       <div class="hero-actions">
         <a class="btn btn-raiz" href="#cursos">Ver os cursos
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
@@ -314,7 +299,7 @@
       </div>
       <div class="hero-facts">
         <div><b>7</b><span>matérias</span></div>
-        <div><b>2</b><span>formatos: presencial e online</span></div>
+        <div><b>até 10x</b><span>no cartão ou no PIX mensal</span></div>
         <div><b>desde 2010</b><span>na preparação para o ENEM</span></div>
       </div>
     </div>
@@ -327,15 +312,7 @@
         <div>
           <span class="kicker">Escolha o seu isolado</span>
           <h2>Os cursos de 2027</h2>
-          <p>Cada curso tem página própria de matrícula. Escolha o formato e siga para o pagamento.</p>
-        </div>
-        <div class="seg" role="group" aria-label="Formato do curso">
-          <button type="button" data-formato="presencial" aria-pressed="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6"/></svg>Presencial
-          </button>
-          <button type="button" data-formato="online" aria-pressed="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Online
-          </button>
+          <p>Cada isolado tem professor, dia de aula, valor e matrícula próprios. O material é cobrado à parte.</p>
         </div>
       </div>
       <div class="grid" id="grade"></div>
@@ -349,7 +326,7 @@
         <div>
           <span class="kicker">Mais de uma matéria?</span>
           <h2>Monte a sua combinação de isolados.</h2>
-          <p>Quem faz duas ou mais matérias fala com o atendimento para ver condições de pacote. (Ideia para decidir: desconto progressivo por número de isolados.)</p>
+          <p>Quem faz duas ou mais matérias fala com o atendimento para ver as condições de combo.</p>
           <div style="margin-top:20px"><a class="btn btn-raiz" data-zap="Olá! Quero fazer mais de um isolado do Radix em 2027." href="#">Montar com o atendimento</a></div>
         </div>
         <div class="dots" id="dots"></div>
@@ -362,10 +339,10 @@
     <div class="wrap">
       <div class="sec-head"><div><span class="kicker">Matrícula</span><h2>Como funciona</h2></div></div>
       <div class="steps">
-        <div class="step"><h3>Escolha o isolado</h3><p>Veja professor, formato e valor de cada curso nesta página.</p></div>
-        <div class="step"><h3>Crie sua conta</h3><p>Na página do curso você faz um cadastro rápido com nome, e-mail e senha.</p></div>
-        <div class="step"><h3>Pague no PIX ou cartão</h3><p>O PIX aprova na hora. No cartão, o parcelamento aparece na tela de pagamento.</p></div>
-        <div class="step"><h3>Comece a estudar</h3><p>Você recebe a confirmação e as orientações da turma ou do acesso online.</p></div>
+        <div class="step"><h3>Escolha o isolado</h3><p>Veja professor, dia de aula, modalidade e valor de cada curso nesta página.</p></div>
+        <div class="step"><h3>Assine o contrato</h3><p>Com RG e CPF do aluno e do responsável e um comprovante de residência. A assinatura pode ser eletrônica.</p></div>
+        <div class="step"><h3>Pague pelo canal oficial</h3><p>Cartão em até 10x ou PIX gerado pela plataforma de pagamento Lumen. A primeira parcela confirma a vaga.</p></div>
+        <div class="step"><h3>Comece a estudar</h3><p>As aulas começam entre 22 de janeiro e 4 de fevereiro de 2027, conforme o curso.</p></div>
       </div>
     </div>
   </section>
@@ -373,26 +350,26 @@
   <!-- FORMATOS -->
   <section id="formatos">
     <div class="wrap">
-      <div class="sec-head"><div><span class="kicker">Formatos</span><h2>Presencial ou online</h2><p>O conteúdo e o professor são os mesmos. Muda onde e como você assiste.</p></div></div>
+      <div class="sec-head"><div><span class="kicker">Onde e como</span><h2>Na sala e na plataforma</h2><p>Todo isolado tem aula presencial em Mossoró. Vários incluem também a plataforma online do curso.</p></div></div>
       <div class="formats">
         <div class="format">
           <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6"/></svg>Presencial</h3>
-          <p>Aulas na sede do Radix, em Mossoró.</p>
+          <p>Rua Doutor João Marcelino, 173, Nova Betânia, Mossoró/RN.</p>
           <ul>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Tirar dúvida com o professor na hora</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Turma, rotina e horário fixos</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Material e simulados impressos</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Vagas limitadas por sala</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Dia e horário fixos para cada isolado</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Apostila entregue no início das aulas</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Recesso de 21 de junho a 4 de julho</li>
           </ul>
         </div>
         <div class="format">
           <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Online</h3>
-          <p>Para quem mora fora ou precisa de horário livre.</p>
+          <p>Incluída em Matemática, Física, Química e Biologia Premium. Redação tem turma online.</p>
           <ul>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Aulas gravadas para assistir quando quiser</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Material em PDF</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Canal de dúvidas com o professor</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Valor menor que o presencial</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Aulas gravadas para rever quando quiser</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Resolução das questões e plantões de dúvidas</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Matemática: aula online toda quinta</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Acesso pessoal, liberado após a matrícula</li>
           </ul>
         </div>
       </div>
@@ -405,10 +382,12 @@
       <div class="sec-head"><div><span class="kicker">Dúvidas</span><h2>Perguntas frequentes</h2></div></div>
       <div class="faq">
         <details><summary>Posso fazer só uma matéria?</summary><p>Pode. Cada isolado é vendido separado. Você escolhe só o que precisa reforçar.</p></details>
-        <details><summary>Quando começam as aulas?</summary><p>[A definir] Data de início e calendário de cada isolado.</p></details>
-        <details><summary>Quais são as formas de pagamento?</summary><p>PIX ou cartão de crédito, direto na página de cada curso. O número de parcelas aparece na hora do pagamento.</p></details>
-        <details><summary>Posso trocar de presencial para online depois?</summary><p>[A definir] Regra de troca de formato durante o ano.</p></details>
-        <details><summary>Onde ficam as aulas presenciais?</summary><p>[A definir] Endereço da sede do Radix em Mossoró.</p></details>
+        <details><summary>Quando começam as aulas?</summary><p>Redação em 22/01, Física em 25/01, Biologia em 27/01, Matemática e Química em 28/01, Humanas em 02/02 e Linguagens em 04/02/2027. As aulas seguem até perto do ENEM, com recesso no Carnaval, na Semana Santa e de 21 de junho a 4 de julho.</p></details>
+        <details><summary>Onde ficam as aulas presenciais?</summary><p>Rua Doutor João Marcelino, 173, Nova Betânia, Mossoró/RN.</p></details>
+        <details><summary>Quais são as formas de pagamento?</summary><p>O curso pode ser pago à vista, em até 10x no cartão ou em até 10 parcelas mensais no PIX. O material é cobrado à parte, à vista ou em até 3x. Cada curso é do seu professor: o contrato e o pagamento são feitos com a empresa dele.</p></details>
+        <details><summary>Como sei que o pagamento é seguro?</summary><p>Só valem pagamentos no cartão (link ou máquina oficial) ou por PIX gerado pela plataforma de pagamento Lumen. Nunca pague por PIX direto para a chave de uma pessoa, nem do professor: esse pagamento não quita a matrícula.</p></details>
+        <details><summary>Tem desconto?</summary><p>Em todos os isolados: 10% para pagamento à vista e 40% para quem estuda ou estudou o ensino médio em escola pública, com comprovação. Alguns cursos têm também desconto de ex-aluno, de irmãos ou de escola parceira; o atendimento informa. Os descontos não se somam e não valem para o material.</p></details>
+        <details><summary>E se a turma não fechar?</summary><p>Cada turma tem um número mínimo de alunos. Se não for atingido até 28/02/2027, a turma pode ser cancelada e você recebe de volta tudo o que pagou em até 10 dias.</p></details>
       </div>
     </div>
   </section>
@@ -426,35 +405,47 @@
 
 <script>
 /* =========================================================
-   CATÁLOGO — edite aqui. Cada curso aponta para a sua página
-   de matrícula (a Matemática já existe: /vendas).
-   url: null = ainda sem página -> botão vira "Avise-me".
-   precos: null = "a definir".
+   CATÁLOGO — edite aqui. Fonte: contratos 2027 de cada curso
+   (Radix Empreendimentos > Administrativo > Contratos >
+   Cursos 2027 > Contratos Prontos), conferidos em 12/11/2026.
+   url: null      = sem página de matrícula -> botão "Avise-me".
+   preco: null    = "valor a definir". Número = valor integral do
+                    curso; a página mostra também 10x (máximo do contrato).
+   material: texto curto do valor do material (cobrado à parte).
    ========================================================= */
 const RADIX_CURSOS = {
   whatsapp: '5584998131870',
+  parcelasMax: 10,
   cursos: [
     { id: 'matematica', classe: 'm', nome: 'Matemática', area: 'Exatas', prof: 'Hugo Gomes', foto: 'cursos-hugo.webp?v=4',
-      itens: ['Toda a matemática do ENEM', 'Banco de questões no app Radix', 'Simulados com nota TRI'],
-      url: { presencial: 'https://app.radixmatematica.com.br/vendas', online: 'https://app.radixmatematica.com.br/vendas' }, precos: { presencial: null, online: null } },
+      modalidade: 'Presencial + online',
+      itens: ['Terça presencial, das 8h30 às 12h ou das 14h30 às 18h', 'Quinta online e plataforma com aulas gravadas', '160 horas, a partir de 28 de janeiro'],
+      url: null, preco: 2800, material: 'Material R$ 360' },
     { id: 'fisica', classe: 'f', nome: 'Física', area: 'Ciências da Natureza', prof: 'Rafael Medeiros', foto: 'cursos-rafael.webp',
-      itens: ['Mecânica, eletricidade, ondas e óptica', 'Resolução de questões do ENEM', 'Revisão antes da prova'],
-      url: null, precos: { presencial: null, online: null } },
+      modalidade: 'Presencial + online',
+      itens: ['Segunda presencial, das 14h às 17h30', 'Com Rafael Medeiros e Cezar Henrique', '120 horas, a partir de 25 de janeiro'],
+      url: null, preco: 3000, material: 'Material R$ 500 (4 volumes)' },
     { id: 'biologia', classe: 'b', nome: 'Biologia', area: 'Ciências da Natureza', prof: 'Mateus Medeiros', foto: 'cursos-mateus.webp',
-      itens: ['Ecologia, genética e fisiologia', 'Resolução de questões do ENEM', 'Revisão antes da prova'],
-      url: null, precos: { presencial: null, online: null } },
+      modalidade: 'Premium: presencial + online',
+      itens: ['Quarta presencial, das 14h30 às 18h', 'Premium inclui o curso online completo', '126 horas, a partir de 27 de janeiro'],
+      url: null, preco: 2860, material: 'Material digital R$ 249 ou impresso R$ 499',
+      nota: 'Plano Básico (só presencial): valor a confirmar' },
     { id: 'redacao', classe: 'r', nome: 'Redação', area: 'Redação ENEM', prof: 'Rhayara Lira', foto: 'cursos-rhayara.webp',
-      itens: ['As 5 competências da correção', 'Temas e repertório', 'Correção individual de textos'],
-      url: null, precos: { presencial: null, online: null } },
+      modalidade: 'Presencial ou online',
+      itens: ['Sexta presencial, das 14h30 às 16h30, semana sim, semana não', 'Na outra semana, atendimento individual pelo Meet', '100 horas, a partir de 22 de janeiro'],
+      url: null, preco: null, material: 'Kit R$ 340: 3 apostilas, camisa, bag e bloco' },
     { id: 'linguagens', classe: 'l', nome: 'Linguagens', area: 'Linguagens', prof: 'Milene Lima', foto: 'cursos-milene.webp?v=2',
-      itens: ['Interpretação de texto e gramática', 'Literatura e artes', 'Resolução de questões do ENEM'],
-      url: null, precos: { presencial: null, online: null } },
+      modalidade: 'Presencial',
+      itens: ['Quinta presencial, das 19h às 22h', 'Simulados autorais com TRI e listas extras', 'A partir de 4 de fevereiro'],
+      url: null, preco: 2400, material: 'Material R$ 300' },
     { id: 'quimica', classe: 'q', nome: 'Química', area: 'Ciências da Natureza', prof: 'Thiago Magalhães', foto: 'cursos-thiago.webp',
-      itens: ['Geral, físico-química e orgânica', 'Resolução de questões do ENEM', 'Revisão antes da prova'],
-      url: null, precos: { presencial: null, online: null } },
+      modalidade: 'Presencial + online',
+      itens: ['Quinta presencial, das 14h às 18h', 'Plataforma com aulas gravadas e plantões', '150 horas, a partir de 28 de janeiro'],
+      url: null, preco: 2700, material: 'Material R$ 360' },
     { id: 'humanas', classe: 'h', nome: 'Humanas', area: 'Ciências Humanas', prof: 'Sandro Cocco', foto: 'cursos-sandro.webp?v=2',
-      itens: ['História, geografia, filosofia e sociologia', 'Leitura de mapas, gráficos e textos', 'Resolução de questões do ENEM'],
-      url: null, precos: { presencial: null, online: null } }
+      modalidade: 'Presencial',
+      itens: ['Terça presencial, das 18h30 às 22h', 'Convidados em História e Geografia', '100 horas, a partir de 2 de fevereiro'],
+      url: null, preco: 2600, material: 'Material R$ 350' }
   ]
 };
 
@@ -471,18 +462,19 @@ const GLIFOS = {
 const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>';
 const SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
-let formato = 'presencial';
-const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: Number.isInteger(v) ? 0 : 2 });
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const zap = msg => 'https://wa.me/' + RADIX_CURSOS.whatsapp + '?text=' + encodeURIComponent(msg || 'Olá! Quero saber dos isolados do Radix para 2027.');
 
 function render() {
   const grade = document.getElementById('grade');
   grade.innerHTML = RADIX_CURSOS.cursos.map(c => {
-    const url = c.url && c.url[formato];
-    const preco = c.precos[formato];
+    const url = c.url;
+    const preco = c.preco;
     const aberto = !!url;
-    const destino = aberto ? url : zap('Olá! Quero ser avisado quando abrir a matrícula do isolado de ' + c.nome + ' (' + formato + ') em 2027.');
+    const destino = aberto ? url : zap('Olá! Quero ser avisado quando abrir a matrícula do isolado de ' + c.nome + ' em 2027.');
+    const n = RADIX_CURSOS.parcelasMax;
+    const detalhe = [preco == null ? '' : 'ou ' + n + 'x de ' + brl(preco / n), c.material, c.nota].filter(Boolean).map(esc).join('<br>');
     return `
     <article class="card ${c.classe} ${aberto ? '' : 'is-soon'}">
       <div class="card-hero">
@@ -497,20 +489,15 @@ function render() {
       </div>
       <ul>${c.itens.map(i => `<li>${CHECK}<span>${esc(i)}</span></li>`).join('')}</ul>
       <div class="card-foot">
-        <div class="price"><small>${formato === 'presencial' ? 'Presencial' : 'Online'}</small>${preco == null ? '<b class="tbd">valor a definir</b>' : '<b>' + brl(preco) + '</b>'}</div>
+        <div class="price"><small>${esc(c.modalidade)}</small>${preco == null ? '<b class="tbd">valor a definir</b>' : '<b>' + brl(preco) + '</b>'}</div>
         <a class="btn btn-curso" href="${esc(destino)}" ${aberto ? '' : 'target="_blank" rel="noopener"'}>${aberto ? 'Matricular' : 'Avise-me'} ${SETA}</a>
+        ${detalhe ? `<p class="price-det">${detalhe}</p>` : ''}
       </div>
     </article>`;
   }).join('');
 }
 
 document.getElementById('dots').innerHTML = RADIX_CURSOS.cursos.map(c => `<span class="${c.classe}"><i></i>${esc(c.nome)}</span>`).join('');
-
-document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
-  formato = b.dataset.formato;
-  document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b));
-  render();
-}));
 
 document.querySelectorAll('[data-zap]').forEach(a => {
   a.href = zap(a.dataset.zap || ''); a.target = '_blank'; a.rel = 'noopener';
