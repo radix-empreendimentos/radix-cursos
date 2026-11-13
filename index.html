@@ -139,8 +139,8 @@
     overflow: hidden; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
   }
   .card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); box-shadow: var(--shadow); }
-  .card-foto { position: relative; aspect-ratio: 9 / 7; background: color-mix(in srgb, var(--c) 14%, var(--surface)); border-bottom: 3px solid var(--c); overflow: hidden; }
-  .card-foto img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .3s ease; }
+  .card-foto { position: relative; aspect-ratio: 1000 / 758; background: color-mix(in srgb, var(--c) 14%, var(--surface)); border-bottom: 3px solid var(--c); overflow: hidden; }
+  .card-foto img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; transition: transform .3s ease; }
   .card:hover .card-foto img { transform: scale(1.03); }
   .badge {
     position: absolute; top: 14px; left: 14px; z-index: 1;
@@ -393,41 +393,42 @@
    preco: null    = "valor a definir". Número = valor integral do
                     curso; a página mostra também 10x (máximo do contrato).
    material: texto curto do valor do material (cobrado à parte).
-   foto: recorte do carrossel "Time Radix" do Instagram (time-*.webp).
+   foto: recorte do carrossel "Time Radix" do Instagram (time-*.webp);
+         ao trocar uma imagem, suba o ?v=N para furar o cache.
    ========================================================= */
 const RADIX_CURSOS = {
   whatsapp: '5584998131870',
   parcelasMax: 10,
   cursos: [
-    { id: 'matematica', classe: 'm', nome: 'Matemática', area: 'Exatas', prof: 'Hugo Gomes', foto: 'time-hugo.webp',
+    { id: 'matematica', classe: 'm', nome: 'Matemática', area: 'Exatas', prof: 'Hugo Gomes', foto: 'time-hugo.webp?v=2',
       modalidade: 'Presencial + online',
       itens: ['Terça presencial, das 8h30 às 12h ou das 14h30 às 18h', 'Quinta online e plataforma com aulas gravadas', 'Início em 28 de janeiro'],
       url: null, preco: 2800, material: 'Material R$ 360' },
-    { id: 'fisica', classe: 'f', nome: 'Física', area: 'Ciências da Natureza', prof: 'Rafael Medeiros', foto: 'time-rafael.webp',
+    { id: 'fisica', classe: 'f', nome: 'Física', area: 'Ciências da Natureza', prof: 'Rafael Medeiros', foto: 'time-rafael.webp?v=2',
       modalidade: 'Presencial + online',
       itens: ['Segunda presencial, das 14h às 17h30', 'Com Rafael Medeiros e Cezar Henrique', 'Início em 25 de janeiro'],
       url: null, preco: 3000, material: 'Material R$ 500 (4 volumes)' },
-    { id: 'biologia', classe: 'b', nome: 'Biologia', area: 'Ciências da Natureza', prof: 'Mateus Medeiros', foto: 'time-mateus.webp',
+    { id: 'biologia', classe: 'b', nome: 'Biologia', area: 'Ciências da Natureza', prof: 'Mateus Medeiros', foto: 'time-mateus.webp?v=2',
       modalidade: 'Presencial',
       itens: ['Quarta presencial, das 14h30 às 18h', 'Teoria, questões e módulo de revisão', 'Início em 27 de janeiro'],
       url: null, preco: 2800, material: 'Material digital R$ 249 ou impresso R$ 499' },
-    { id: 'redacao', classe: 'r', nome: 'Redação', area: 'Redação ENEM', prof: 'Rhayara Lira', foto: 'time-rhayara.webp',
+    { id: 'quimica', classe: 'q', nome: 'Química', area: 'Ciências da Natureza', prof: 'Thiago Magalhães', foto: 'time-thiago.webp?v=2',
+      modalidade: 'Presencial + online',
+      itens: ['Quinta presencial, das 14h às 18h', 'Plataforma com aulas gravadas e plantões', 'Início em 28 de janeiro'],
+      url: null, preco: 2700, material: 'Material R$ 360' },
+    { id: 'humanas', classe: 'h', nome: 'Humanas', area: 'Ciências Humanas', prof: 'Sandro Cocco', foto: 'time-sandro.webp?v=2',
+      modalidade: 'Presencial',
+      itens: ['Terça presencial, das 18h30 às 22h', 'Convidados em História e Geografia', 'Início em 2 de fevereiro'],
+      url: null, preco: 2600, material: 'Material R$ 350' },
+    { id: 'redacao', classe: 'r', nome: 'Redação', area: 'Redação ENEM', prof: 'Rhayara Lira', foto: 'time-rhayara.webp?v=2',
       modalidade: 'Presencial',
       itens: ['Sexta presencial, das 14h30 às 16h30, semana sim, semana não', 'Na outra semana, atendimento individual pelo Meet', 'Início em 22 de janeiro'],
       url: null, preco: 2400, material: 'Kit R$ 340: 3 apostilas, camisa, bag e bloco',
       nota: 'Turma online: R$ 1.400 (R$ 749 na Black Friday)' },
-    { id: 'linguagens', classe: 'l', nome: 'Linguagens', area: 'Linguagens', prof: 'Milene Lima', foto: 'time-milene.webp',
+    { id: 'linguagens', classe: 'l', nome: 'Linguagens', area: 'Linguagens', prof: 'Milene Lima', foto: 'time-milene.webp?v=2',
       modalidade: 'Presencial',
       itens: ['Quinta presencial, das 19h às 22h', 'Simulados autorais com TRI e listas extras', 'Início em 4 de fevereiro'],
-      url: null, preco: 2400, material: 'Material R$ 300' },
-    { id: 'quimica', classe: 'q', nome: 'Química', area: 'Ciências da Natureza', prof: 'Thiago Magalhães', foto: 'time-thiago.webp',
-      modalidade: 'Presencial + online',
-      itens: ['Quinta presencial, das 14h às 18h', 'Plataforma com aulas gravadas e plantões', 'Início em 28 de janeiro'],
-      url: null, preco: 2700, material: 'Material R$ 360' },
-    { id: 'humanas', classe: 'h', nome: 'Humanas', area: 'Ciências Humanas', prof: 'Sandro Cocco', foto: 'time-sandro.webp',
-      modalidade: 'Presencial',
-      itens: ['Terça presencial, das 18h30 às 22h', 'Convidados em História e Geografia', 'Início em 2 de fevereiro'],
-      url: null, preco: 2600, material: 'Material R$ 350' }
+      url: null, preco: 2400, material: 'Material R$ 300' }
   ]
 };
 
@@ -449,7 +450,7 @@ function render() {
     <article class="card ${c.classe}">
       <div class="card-foto">
         <span class="badge ${aberto ? 'open' : ''}">${aberto ? 'Matrículas abertas' : 'Em breve'}</span>
-        <img src="${esc(c.foto)}" alt="${esc(c.prof)}" loading="lazy" width="900" height="801">
+        <img src="${esc(c.foto)}" alt="${esc(c.prof)}" loading="lazy" width="1000" height="758">
       </div>
       <div class="card-body">
         <span class="area">Isolado ENEM 2027 / ${esc(c.area)}</span>
