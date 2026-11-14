@@ -162,6 +162,34 @@
   .price .tbd { font: 700 15px 'DM Sans', sans-serif; color: var(--text-2); letter-spacing: 0; }
   .price-det { flex-basis: 100%; font-size: 13px; color: var(--muted); line-height: 1.45; }
   .card .btn { padding: 9px 16px; font-size: 14px; min-height: 42px; }
+  .price-det a { color: var(--destaque); font-weight: 700; }
+
+  /* ---------- matrícula pela Lumen ---------- */
+  .acoes { display: flex; flex-direction: column; gap: 8px; }
+  .acoes.multi { flex-basis: 100%; }
+  .acoes .turma { font: 500 11px 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  [data-lumen-add][aria-pressed="true"] { display: none; }
+  .card [data-lumen-remove] { display: none; }
+  .card [data-lumen-remove][data-lumen-status] { display: inline-flex; }
+  .btn-nocarrinho { background: var(--bg-2); color: var(--text); border-color: var(--line-2); }
+  .btn-nocarrinho:hover { background: var(--line); }
+  .carrinho {
+    position: fixed; z-index: 30; left: 50%; bottom: 16px; transform: translateX(-50%);
+    width: min(760px, calc(100% - 24px)); background: var(--noite); color: var(--papel);
+    border: 1px solid var(--apoio); border-radius: 14px; box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    padding: 14px 16px; display: flex; align-items: center; gap: 16px;
+  }
+  .carrinho[hidden] { display: none; }
+  .carrinho .kicker { color: var(--ambar); }
+  .carrinho ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .carrinho li { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; background: rgba(247,242,231,.08); border: 1px solid rgba(247,242,231,.14); border-radius: 8px; padding: 4px 4px 4px 10px; }
+  .carrinho li small { color: var(--ambar); font-weight: 700; }
+  .carrinho li button { border: 0; background: transparent; color: #A9B3C2; font-size: 16px; line-height: 1; width: 24px; height: 24px; border-radius: 6px; cursor: pointer; }
+  .carrinho li button:hover { background: rgba(247,242,231,.12); color: var(--papel); }
+  .carrinho .itens { flex: 1; min-width: 0; }
+  .carrinho .btn { flex: none; }
+  .carrinho .btn[aria-disabled="true"] { pointer-events: none; opacity: .5; }
+  body.tem-carrinho footer { padding-bottom: 140px; }
 
   .m { --c: var(--mat); } .f { --c: var(--fis); } .b { --c: var(--bio); } .q { --c: var(--qui); }
   .h { --c: var(--hum); } .r { --c: var(--red); } .l { --c: var(--lin); }
@@ -206,6 +234,7 @@
   summary::after { content: '+'; font: 500 20px 'IBM Plex Mono', monospace; color: var(--destaque); line-height: 1; }
   details[open] summary::after { content: '−'; }
   details p { padding: 0 20px 18px; color: var(--text-2); font-size: 15px; }
+  details p a { color: var(--destaque); font-weight: 700; }
 
   /* ---------- rodapé ---------- */
   footer { border-top: 1px solid var(--line); padding: 36px 0 56px; margin-top: 30px; }
@@ -221,6 +250,8 @@
     .grafismo { display: none; }
     .combo { grid-template-columns: 1fr; padding: 26px; }
     .dots { justify-content: flex-start; }
+    .carrinho { flex-direction: column; align-items: stretch; gap: 10px; bottom: 10px; }
+    .carrinho .btn { width: 100%; }
   }
   @media (max-width: 420px) {
     .wrap { padding: 0 16px; }
@@ -306,7 +337,7 @@
         <div>
           <span class="kicker">Mais de uma matéria</span>
           <h2>Monte a sua combinação de isolados.</h2>
-          <p>Quem faz duas ou mais matérias fala com o atendimento para ver as condições de combo.</p>
+          <p>Coloque no carrinho todos os isolados que quiser e pague de uma vez. Para condições de combo, fale com o atendimento.</p>
           <div style="margin-top:20px"><a class="btn btn-ambar" data-zap="Olá! Quero fazer mais de um isolado do Radix em 2027." href="#">Montar com o atendimento</a></div>
         </div>
         <div class="dots" id="dots"></div>
@@ -319,10 +350,10 @@
     <div class="wrap">
       <div class="sec-head"><span class="kicker">Matrícula</span><h2>Como funciona</h2></div>
       <div class="steps">
-        <div class="step"><h3>Escolha o isolado</h3><p>Veja professor, dia de aula, modalidade e valor de cada curso nesta página.</p></div>
-        <div class="step"><h3>Assine o contrato</h3><p>Com RG e CPF do aluno e do responsável e um comprovante de residência. A assinatura pode ser eletrônica.</p></div>
-        <div class="step"><h3>Pague pelo canal oficial</h3><p>Cartão em até 10x ou PIX gerado pela plataforma de pagamento Lumen. A primeira parcela confirma a vaga.</p></div>
-        <div class="step"><h3>Comece a estudar</h3><p>As aulas começam entre 22 de janeiro e 4 de fevereiro de 2027, conforme o curso.</p></div>
+        <div class="step"><h3>Escolha os isolados</h3><p>Clique em Matricular nos cursos que quiser. Eles vão para o carrinho, e você paga tudo de uma vez.</p></div>
+        <div class="step"><h3>Finalize a compra</h3><p>No checkout da plataforma Lumen, o responsável cria a conta, indica quem vai assistir às aulas e aceita o contrato.</p></div>
+        <div class="step"><h3>Pague a matrícula</h3><p>A matrícula (material) no PIX ou em até 3x no cartão. O curso fica em mensalidades no PIX.</p></div>
+        <div class="step"><h3>Envie o contrato</h3><p>Em Minha conta, preencha, assine e envie o contrato. As mensalidades só começam depois disso.</p></div>
       </div>
     </div>
   </section>
@@ -364,8 +395,9 @@
         <details><summary>Posso fazer só uma matéria?</summary><p>Pode. Cada isolado é vendido separado. Você escolhe só o que precisa reforçar.</p></details>
         <details><summary>Quando começam as aulas?</summary><p>Redação em 22/01, Física em 25/01, Biologia em 27/01, Matemática e Química em 28/01, Humanas em 02/02 e Linguagens em 04/02/2027. As aulas seguem até perto do ENEM, com recesso no Carnaval, na Semana Santa e de 21 de junho a 4 de julho.</p></details>
         <details><summary>Onde ficam as aulas presenciais?</summary><p>Rua Doutor João Marcelino, 173, Nova Betânia, Mossoró/RN.</p></details>
-        <details><summary>Quais são as formas de pagamento?</summary><p>O curso pode ser pago à vista, em até 10x no cartão ou em até 10 parcelas mensais no PIX. O material é cobrado à parte, à vista ou em até 3x. Cada curso é do seu professor: o contrato e o pagamento são feitos com a empresa dele.</p></details>
-        <details><summary>Como sei que o pagamento é seguro?</summary><p>Só valem pagamentos no cartão (link ou máquina oficial) ou por PIX gerado pela plataforma de pagamento Lumen. Nunca pague por PIX direto para a chave de uma pessoa, nem do professor: esse pagamento não quita a matrícula.</p></details>
+        <details><summary>Quais são as formas de pagamento?</summary><p>Na matrícula pelo site, a matrícula (o material didático) é paga no PIX ou em até 3x no cartão, e o curso fica em 10 mensalidades no PIX. Para pagar o curso de outra forma, fale com o atendimento. Cada curso é do seu professor: o contrato e o pagamento são feitos com a empresa dele.</p></details>
+        <details><summary>Como sei que o pagamento é seguro?</summary><p>O botão Finalizar compra leva ao checkout da plataforma de pagamento Lumen, em checkout.lumenio.com.br. Só valem pagamentos feitos ali, ou no cartão por link ou máquina oficial. Nunca pague por PIX direto para a chave de uma pessoa, nem do professor: esse pagamento não quita a matrícula.</p></details>
+        <details><summary>Já paguei. E agora?</summary><p>Você recebe a confirmação por e-mail. Em <a href="https://admin.lumenio.com.br/minha-conta" target="_blank" rel="noopener">Minha conta</a>, na aba Contratos, preencha os dados, baixe o contrato, assine e envie o PDF. As mensalidades no PIX só começam depois que o contrato chega e aparecem também em Minha conta.</p></details>
         <details><summary>Tem desconto?</summary><p>Em todos os isolados: 10% para pagamento à vista e 40% para quem estuda ou estudou o ensino médio em escola pública, com comprovação. Alguns cursos têm também desconto de ex-aluno, de irmãos ou de escola parceira; o atendimento informa. Os descontos não se somam e não valem para o material.</p></details>
         <details><summary>E se a turma não fechar?</summary><p>Cada turma tem um número mínimo de alunos. Se não for atingido até 28/02/2027, a turma pode ser cancelada e você recebe de volta tudo o que pagou em até 10 dias.</p></details>
       </div>
@@ -383,15 +415,32 @@
   </div>
 </footer>
 
+<!-- CARRINHO (preenchido pelo script da Lumen) -->
+<div class="carrinho" id="carrinho" hidden aria-live="polite">
+  <div class="itens">
+    <span class="kicker">Seu carrinho</span>
+    <ul id="carrinho-lista"></ul>
+  </div>
+  <a class="btn btn-ambar" data-lumen-checkout-link>Finalizar compra
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+</div>
+
+<script src="https://checkout.lumenio.com.br/lumen-cart.js" data-lumen-store="radix"></script>
 <script>
 /* =========================================================
    CATÁLOGO — edite aqui. Fonte: contratos 2027 de cada curso
    (Radix Empreendimentos > Administrativo > Contratos >
    Cursos 2027 > Contratos Prontos) e Informativo 2027
    atualizado, conferidos em 12/11/2026.
-   url: null      = sem página de matrícula -> botão "Avise-me".
+   lumen: trecho do nome do curso na loja Lumen (sem acento,
+          minúsculas). Se a API da loja tiver oferta com esse nome,
+          o cartão mostra preço e turmas da API e o botão
+          "Matricular" (carrinho + checkout). Sem oferta: "Avise-me".
+          Nunca fixe listingId aqui: ele vem sempre da API.
    preco: null    = "valor a definir". Número = valor integral do
-                    curso; a página mostra também 10x (máximo do contrato).
+                    curso (usado só sem oferta na Lumen); a página
+                    mostra também 10x (máximo do contrato).
    material: texto curto do valor do material (cobrado à parte).
    foto: recorte do carrossel "Time Radix" do Instagram (time-*.webp);
          ao trocar uma imagem, suba o ?v=N para furar o cache.
@@ -400,35 +449,35 @@ const RADIX_CURSOS = {
   whatsapp: '5584998131870',
   parcelasMax: 10,
   cursos: [
-    { id: 'matematica', classe: 'm', nome: 'Matemática', area: 'Exatas', prof: 'Hugo Gomes', foto: 'time-hugo.webp?v=2',
+    { id: 'matematica', lumen: 'matematica', classe: 'm', nome: 'Matemática', area: 'Exatas', prof: 'Hugo Gomes', foto: 'time-hugo.webp?v=2',
       modalidade: 'Presencial + online',
       itens: ['Terça presencial, das 8h30 às 12h ou das 14h30 às 18h', 'Quinta online e plataforma com aulas gravadas', 'Início em 28 de janeiro'],
-      url: null, preco: 2800, material: 'Material R$ 360' },
-    { id: 'fisica', classe: 'f', nome: 'Física', area: 'Ciências da Natureza', prof: 'Rafael Medeiros', foto: 'time-rafael.webp?v=2',
+      preco: 2800, material: 'Material R$ 360' },
+    { id: 'fisica', lumen: 'fisica', classe: 'f', nome: 'Física', area: 'Ciências da Natureza', prof: 'Rafael Medeiros', foto: 'time-rafael.webp?v=2',
       modalidade: 'Presencial + online',
       itens: ['Segunda presencial, das 14h às 17h30', 'Com Rafael Medeiros e Cezar Henrique', 'Início em 25 de janeiro'],
-      url: null, preco: 3000, material: 'Material R$ 500 (4 volumes)' },
-    { id: 'biologia', classe: 'b', nome: 'Biologia', area: 'Ciências da Natureza', prof: 'Mateus Medeiros', foto: 'time-mateus.webp?v=2',
+      preco: 3000, material: 'Material R$ 500 (4 volumes)' },
+    { id: 'biologia', lumen: 'biologia', classe: 'b', nome: 'Biologia', area: 'Ciências da Natureza', prof: 'Mateus Medeiros', foto: 'time-mateus.webp?v=2',
       modalidade: 'Presencial',
       itens: ['Quarta presencial, das 14h30 às 18h', 'Teoria, questões e módulo de revisão', 'Início em 27 de janeiro'],
-      url: null, preco: 2800, material: 'Material digital R$ 249 ou impresso R$ 499' },
-    { id: 'quimica', classe: 'q', nome: 'Química', area: 'Ciências da Natureza', prof: 'Thiago Magalhães', foto: 'time-thiago.webp?v=2',
+      preco: 2800, material: 'Material digital R$ 249 ou impresso R$ 499' },
+    { id: 'quimica', lumen: 'quimica', classe: 'q', nome: 'Química', area: 'Ciências da Natureza', prof: 'Thiago Magalhães', foto: 'time-thiago.webp?v=2',
       modalidade: 'Presencial + online',
       itens: ['Quinta presencial, das 14h às 18h', 'Plataforma com aulas gravadas e plantões', 'Início em 28 de janeiro'],
-      url: null, preco: 2700, material: 'Material R$ 360' },
-    { id: 'humanas', classe: 'h', nome: 'Humanas', area: 'Ciências Humanas', prof: 'Sandro Cocco', foto: 'time-sandro.webp?v=2',
+      preco: 2700, material: 'Material R$ 360' },
+    { id: 'humanas', lumen: 'humanas', classe: 'h', nome: 'Humanas', area: 'Ciências Humanas', prof: 'Sandro Cocco', foto: 'time-sandro.webp?v=2',
       modalidade: 'Presencial',
       itens: ['Terça presencial, das 18h30 às 22h', 'Convidados em História e Geografia', 'Início em 2 de fevereiro'],
-      url: null, preco: 2600, material: 'Material R$ 350' },
-    { id: 'redacao', classe: 'r', nome: 'Redação', area: 'Redação ENEM', prof: 'Rhayara Lira', foto: 'time-rhayara.webp?v=2',
+      preco: 2600, material: 'Material R$ 350' },
+    { id: 'redacao', lumen: 'redacao', classe: 'r', nome: 'Redação', area: 'Redação ENEM', prof: 'Rhayara Lira', foto: 'time-rhayara.webp?v=2',
       modalidade: 'Presencial',
       itens: ['Sexta presencial, das 14h30 às 16h30, semana sim, semana não', 'Na outra semana, atendimento individual pelo Meet', 'Início em 22 de janeiro'],
-      url: null, preco: 2400, material: 'Kit R$ 340: 3 apostilas, camisa, bag e bloco',
+      preco: 2400, material: 'Kit R$ 340: 3 apostilas, camisa, bag e bloco',
       nota: 'Turma online: R$ 1.400 (R$ 497 na Black Friday)' },
-    { id: 'linguagens', classe: 'l', nome: 'Linguagens', area: 'Linguagens', prof: 'Milene Lima', foto: 'time-milene.webp?v=2',
+    { id: 'linguagens', lumen: 'linguagens', classe: 'l', nome: 'Linguagens', area: 'Linguagens', prof: 'Milene Lima', foto: 'time-milene.webp?v=2',
       modalidade: 'Presencial',
       itens: ['Quinta presencial, das 19h às 22h', 'Simulados autorais com TRI e listas extras', 'Início em 4 de fevereiro'],
-      url: null, preco: 2400, material: 'Material R$ 300' }
+      preco: 2400, material: 'Material R$ 300' }
   ]
 };
 
@@ -439,13 +488,59 @@ const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL',
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const zap = msg => 'https://wa.me/' + RADIX_CURSOS.whatsapp + '?text=' + encodeURIComponent(msg || 'Olá! Quero saber dos isolados do Radix para 2027.');
 
+/* ---------- loja Lumen (guia de integração de 13/11/2026) ----------
+   Catálogo público: GET /storefront/radix (sem credenciais).
+   O carrinho e o link do checkout são do script oficial lumen-cart.js.
+   Nunca vai preço nem dado pessoal no link: a Lumen recalcula tudo.
+   `voltar` fica de fora até o domínio ser cadastrado na Lumen. */
+const LUMEN = { api: 'https://api.lumenio.com.br', loja: 'radix', minhaConta: 'https://admin.lumenio.com.br/minha-conta' };
+let OFERTAS = {};   // id do cartão -> ofertas da API
+
+// "1960.00" -> "R$ 1.960" / "196.50" -> "R$ 196,50", sem passar por float
+function brlTxt(valor) {
+  const [inteiro, cent = '00'] = String(valor).split('.');
+  const c = (cent + '00').slice(0, 2);
+  return 'R$ ' + inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (c === '00' ? '' : ',' + c);
+}
+const dataBR = iso => iso.split('-').reverse().join('/');
+const semAcento = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+// "Radix Matemática 2027 — Turma da manhã (8h30 às 12h)" -> "Turma da manhã (8h30 às 12h)"
+const nomeTurma = (o, i) => o.label || (o.courseTitle.includes('—') ? o.courseTitle.split('—').pop().trim() : 'Turma ' + (i + 1));
+
+function rodapeLumen(c, ofertas) {
+  const o = ofertas[0];
+  const multi = ofertas.length > 1;
+  const mf = o.monthlyFee;
+  const grande = mf ? mf.cycleCount + 'x de ' + brlTxt(mf.amount) : brlTxt(o.price);
+  const det = [];
+  if (mf) det.push(esc('no PIX' + (mf.startDate ? ', a partir de ' + dataBR(mf.startDate) : '')));
+  det.push(esc((mf ? '+ matrícula (material) ' : 'Matrícula ') + brlTxt(o.price) + ', no PIX ou em até ' + (o.maxCardInstallments || 1) + 'x no cartão'));
+  det.push(`<a href="${esc(LUMEN.api + '/storefront/' + LUMEN.loja + '/listings/' + o.listingId + '/contract')}" target="_blank" rel="noopener">Ver contrato</a>`);
+  const botoes = ofertas.map((of, i) => `
+      ${multi ? `<span class="turma">${esc(nomeTurma(of, i))}</span>` : ''}
+      <button type="button" class="btn btn-ambar" data-lumen-add="${esc(of.listingId)}" data-lumen-title="${esc(of.courseTitle)}">Matricular ${SETA}</button>
+      <button type="button" class="btn btn-nocarrinho" data-lumen-remove="${esc(of.listingId)}">No carrinho · remover</button>`).join('');
+  return `
+          <div class="price"><small>${esc(c.modalidade)}</small><b>${esc(grande)}</b></div>
+          ${multi ? `<p class="price-det">${det.join('<br>')}</p><div class="acoes multi">${botoes}</div>`
+                  : `<div class="acoes">${botoes}</div><p class="price-det">${det.join('<br>')}</p>`}`;
+}
+
+function rodapeEstatico(c) {
+  const n = RADIX_CURSOS.parcelasMax;
+  const detalhe = [c.preco == null ? '' : 'ou ' + n + 'x de ' + brl(c.preco / n), c.material, c.nota].filter(Boolean).map(esc).join('<br>');
+  const destino = zap('Olá! Quero ser avisado quando abrir a matrícula do isolado de ' + c.nome + ' em 2027.');
+  return `
+          <div class="price"><small>${esc(c.modalidade)}</small>${c.preco == null ? '<b class="tbd">valor a definir</b>' : '<b>' + brl(c.preco) + '</b>'}</div>
+          <a class="btn btn-line" href="${esc(destino)}" target="_blank" rel="noopener">Avise-me ${SETA}</a>
+          ${detalhe ? `<p class="price-det">${detalhe}</p>` : ''}`;
+}
+
 function render() {
   const grade = document.getElementById('grade');
   grade.innerHTML = RADIX_CURSOS.cursos.map(c => {
-    const aberto = !!c.url;
-    const destino = aberto ? c.url : zap('Olá! Quero ser avisado quando abrir a matrícula do isolado de ' + c.nome + ' em 2027.');
-    const n = RADIX_CURSOS.parcelasMax;
-    const detalhe = [c.preco == null ? '' : 'ou ' + n + 'x de ' + brl(c.preco / n), c.material, c.nota].filter(Boolean).map(esc).join('<br>');
+    const ofertas = OFERTAS[c.id] || [];
+    const aberto = ofertas.length > 0;
     return `
     <article class="card ${c.classe}">
       <div class="card-foto">
@@ -457,14 +552,62 @@ function render() {
         <h3>${esc(c.nome)}</h3>
         <p class="quem">com <b>${esc(c.prof)}</b></p>
         <ul>${c.itens.map(i => `<li>${CHECK}<span>${esc(i)}</span></li>`).join('')}</ul>
-        <div class="card-foot">
-          <div class="price"><small>${esc(c.modalidade)}</small>${c.preco == null ? '<b class="tbd">valor a definir</b>' : '<b>' + brl(c.preco) + '</b>'}</div>
-          <a class="btn ${aberto ? 'btn-ambar' : 'btn-line'}" href="${esc(destino)}" ${aberto ? '' : 'target="_blank" rel="noopener"'}>${aberto ? 'Matricular' : 'Avise-me'} ${SETA}</a>
-          ${detalhe ? `<p class="price-det">${detalhe}</p>` : ''}
+        <div class="card-foot">${aberto ? rodapeLumen(c, ofertas) : rodapeEstatico(c)}
         </div>
       </div>
     </article>`;
   }).join('');
+  sincronizarBotoes();
+}
+
+// Espelha o estado do carrinho nos botões desenhados depois do script da Lumen.
+function sincronizarBotoes() {
+  if (!window.LumenCart) return;
+  const st = {}; LumenCart.details().forEach(d => { st[d.id] = d.status; });
+  document.querySelectorAll('.card [data-lumen-add]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lumenAdd.toLowerCase() in st ? 'true' : 'false'));
+  document.querySelectorAll('.card [data-lumen-remove]').forEach(b => {
+    const id = b.dataset.lumenRemove.toLowerCase();
+    if (id in st) b.setAttribute('data-lumen-status', st[id]); else b.removeAttribute('data-lumen-status');
+  });
+}
+
+const AVISO = { sold_out: 'Vagas esgotadas', unavailable: 'Não está mais disponível' };
+function desenharCarrinho() {
+  const barra = document.getElementById('carrinho');
+  if (!window.LumenCart) { barra.hidden = true; return; }
+  const itens = LumenCart.details();
+  barra.hidden = itens.length === 0;
+  document.body.classList.toggle('tem-carrinho', itens.length > 0);
+  const lista = document.getElementById('carrinho-lista');
+  lista.replaceChildren(...itens.map(it => {
+    const li = document.createElement('li');
+    li.append(document.createTextNode(it.title || 'Curso'));
+    if (AVISO[it.status]) { const s = document.createElement('small'); s.textContent = AVISO[it.status]; li.append(s); }
+    const rm = document.createElement('button');
+    rm.type = 'button'; rm.textContent = '×'; rm.setAttribute('aria-label', 'Remover ' + (it.title || 'curso'));
+    rm.setAttribute('data-lumen-remove', it.id);
+    li.append(rm);
+    return li;
+  }));
+  sincronizarBotoes();
+}
+document.addEventListener('lumen-cart:change', desenharCarrinho);
+
+function carregarLoja() {
+  if (!window.LumenCart) return;            // script da Lumen não carregou: fica o "Avise-me"
+  fetch(LUMEN.api + '/storefront/' + LUMEN.loja)
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(({ items }) => {
+      const mapa = {};
+      (items || []).forEach(o => {
+        const t = semAcento(o.courseTitle);
+        const c = RADIX_CURSOS.cursos.find(c => c.lumen && t.includes(c.lumen));
+        if (c) (mapa[c.id] = mapa[c.id] || []).push(o);
+      });
+      OFERTAS = mapa;
+      render();
+    })
+    .catch(() => {});                       // sem a API, a página segue com o "Avise-me"
 }
 
 document.getElementById('dots').innerHTML = RADIX_CURSOS.cursos.map(c => `<span class="${c.classe}"><i></i>${esc(c.nome)}</span>`).join('');
@@ -482,6 +625,8 @@ document.getElementById('tema').addEventListener('click', () => {
 });
 
 render();
+desenharCarrinho();
+carregarLoja();
 </script>
 </body>
 </html>
