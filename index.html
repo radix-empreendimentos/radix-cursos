@@ -198,6 +198,25 @@
   .m { --c: var(--mat); } .f { --c: var(--fis); } .b { --c: var(--bio); } .q { --c: var(--qui); }
   .h { --c: var(--hum); } .r { --c: var(--red); } .l { --c: var(--lin); }
 
+  /* ---------- Black Friday (âmbar como texto só sobre azul-noite) ---------- */
+  .promo {
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 28px; align-items: center;
+    padding: 36px; border-radius: 14px; background: var(--noite); color: var(--papel);
+    border: 1px solid var(--apoio);
+    background-image: linear-gradient(var(--apoio) 1px, transparent 1px), linear-gradient(90deg, var(--apoio) 1px, transparent 1px);
+    background-size: 48px 48px; background-position: right -1px top -1px;
+  }
+  .promo > div:first-child { background: var(--noite); padding: 4px 8px 4px 0; }
+  .promo .kicker { color: var(--ambar); }
+  .promo h2 { font-size: clamp(26px, 3vw, 38px); line-height: 1.06; margin: 8px 0 10px; }
+  .promo p { color: #D9D3C6; max-width: 56ch; }
+  .promo-acoes { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+  .promo .btn-line { border-color: var(--papel); color: var(--papel); }
+  .promo .btn-line:hover { background: rgba(247,242,231,.08); }
+  .promo-num { justify-self: center; text-align: center; background: var(--noite); padding: 10px 18px; border-radius: 12px; }
+  .promo-num b { display: block; font: 900 clamp(64px, 9vw, 112px) 'Archivo', sans-serif; letter-spacing: -.04em; line-height: .9; color: var(--ambar); }
+  .promo-num span { display: block; margin-top: 8px; font: 500 13px 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--papel); }
+
   /* ---------- combo ---------- */
   .combo {
     display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: center;
@@ -254,6 +273,8 @@
     .grafismo { display: none; }
     .combo { grid-template-columns: 1fr; padding: 26px; }
     .dots { justify-content: flex-start; }
+    .promo { grid-template-columns: 1fr; padding: 26px; gap: 18px; }
+    .promo-num { justify-self: start; text-align: left; padding: 0; order: -1; }
     .carrinho { bottom: 10px; }
     .carrinho .linha { flex-wrap: wrap; }
     .carrinho .linha .btn { width: 100%; }
@@ -335,17 +356,20 @@
     </div>
   </section>
 
-  <!-- COMBO -->
+  <!-- BLACK FRIDAY (tirar quando a promoção acabar) -->
   <section style="padding-top:8px">
     <div class="wrap">
-      <div class="combo">
+      <div class="promo">
         <div>
-          <span class="kicker">Mais de uma matéria</span>
-          <h2>Monte a sua combinação de isolados.</h2>
-          <p>Coloque no carrinho todos os isolados que quiser e pague de uma vez. Para condições de combo, fale com o atendimento.</p>
-          <div style="margin-top:20px"><a class="btn btn-ambar" data-zap="Olá! Quero fazer mais de um isolado do Radix em 2027." href="#">Montar com o atendimento</a></div>
+          <span class="kicker">Black Friday</span>
+          <h2>Todos os isolados com 30% de desconto na anuidade.</h2>
+          <p>O desconto vale para o valor do curso, as 10 mensalidades. A matrícula, que é o material didático, segue sem desconto. Nos cursos com matrículas abertas, os valores desta página já estão com o desconto.</p>
+          <div class="promo-acoes">
+            <a class="btn btn-ambar" href="#cursos">Ver os cursos</a>
+            <a class="btn btn-line" data-zap="Olá! Quero aproveitar a Black Friday dos isolados do Radix 2027." href="#">Falar no WhatsApp</a>
+          </div>
         </div>
-        <div class="dots" id="dots"></div>
+        <div class="promo-num" aria-hidden="true"><b>30%</b><span>de desconto<br>na anuidade</span></div>
       </div>
     </div>
   </section>
@@ -459,7 +483,7 @@ const RADIX_CURSOS = {
   whatsapp: '5584998131870',
   parcelasMax: 10,
   cursos: [
-    { id: 'matematica', lumen: 'matematica', classe: 'm', nome: 'Matemática', area: 'Exatas', prof: 'Hugo Gomes', foto: 'time-hugo.webp?v=2',
+    { id: 'matematica', lumen: 'matematica', classe: 'm', nome: 'Matemática', area: 'Matemática', prof: 'Hugo Gomes', foto: 'time-hugo.webp?v=2',
       modalidade: 'Presencial + online',
       itens: ['Terça presencial, das 8h30 às 12h ou das 14h30 às 18h', 'Quinta online e plataforma com aulas gravadas', 'Início em 28 de janeiro'],
       preco: 2800, material: 'Material R$ 360' },
@@ -640,7 +664,6 @@ function carregarLoja() {
     .catch(() => {});                       // sem a API, a página segue com o "Avise-me"
 }
 
-document.getElementById('dots').innerHTML = RADIX_CURSOS.cursos.map(c => `<span class="${c.classe}"><i></i>${esc(c.nome)}</span>`).join('');
 
 document.querySelectorAll('[data-zap]').forEach(a => {
   a.href = zap(a.dataset.zap || ''); a.target = '_blank'; a.rel = 'noopener';
