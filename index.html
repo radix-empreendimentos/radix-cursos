@@ -165,8 +165,8 @@
   .price-det a { color: var(--destaque); font-weight: 700; }
 
   /* ---------- matrícula pela Lumen ---------- */
-  .acoes { display: flex; flex-direction: column; gap: 8px; }
-  .acoes.multi { flex-basis: 100%; }
+  .acoes { display: flex; flex-direction: column; gap: 8px; flex-basis: 100%; }
+  .acoes .btn { width: 100%; }
   .acoes .turma { font: 500 11px 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   [data-lumen-add][aria-pressed="true"] { display: none; }
   .card [data-lumen-remove] { display: none; }
@@ -177,19 +177,23 @@
     position: fixed; z-index: 30; left: 50%; bottom: 16px; transform: translateX(-50%);
     width: min(760px, calc(100% - 24px)); background: var(--noite); color: var(--papel);
     border: 1px solid var(--apoio); border-radius: 14px; box-shadow: 0 18px 50px rgba(0,0,0,.35);
-    padding: 14px 16px; display: flex; align-items: center; gap: 16px;
+    padding: 10px 12px 10px 16px; display: flex; flex-direction: column; gap: 10px;
   }
   .carrinho[hidden] { display: none; }
+  .carrinho .linha { display: flex; align-items: center; gap: 12px; }
+  .carrinho .resumo { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .carrinho .resumo b { font-weight: 700; font-size: 15px; }
   .carrinho .kicker { color: var(--ambar); }
-  .carrinho ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .btn-itens { background: transparent; border: 1px solid rgba(247,242,231,.3); color: var(--papel); border-radius: 8px; padding: 6px 10px; font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: .04em; cursor: pointer; }
+  .btn-itens:hover { background: rgba(247,242,231,.08); }
+  .carrinho ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; max-height: 40vh; overflow: auto; }
+  .carrinho ul[hidden] { display: none; }
   .carrinho li { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; background: rgba(247,242,231,.08); border: 1px solid rgba(247,242,231,.14); border-radius: 8px; padding: 4px 4px 4px 10px; }
   .carrinho li small { color: var(--ambar); font-weight: 700; }
   .carrinho li button { border: 0; background: transparent; color: #A9B3C2; font-size: 16px; line-height: 1; width: 24px; height: 24px; border-radius: 6px; cursor: pointer; }
   .carrinho li button:hover { background: rgba(247,242,231,.12); color: var(--papel); }
-  .carrinho .itens { flex: 1; min-width: 0; }
   .carrinho .btn { flex: none; }
   .carrinho .btn[aria-disabled="true"] { pointer-events: none; opacity: .5; }
-  body.tem-carrinho footer { padding-bottom: 140px; }
 
   .m { --c: var(--mat); } .f { --c: var(--fis); } .b { --c: var(--bio); } .q { --c: var(--qui); }
   .h { --c: var(--hum); } .r { --c: var(--red); } .l { --c: var(--lin); }
@@ -250,8 +254,9 @@
     .grafismo { display: none; }
     .combo { grid-template-columns: 1fr; padding: 26px; }
     .dots { justify-content: flex-start; }
-    .carrinho { flex-direction: column; align-items: stretch; gap: 10px; bottom: 10px; }
-    .carrinho .btn { width: 100%; }
+    .carrinho { bottom: 10px; }
+    .carrinho .linha { flex-wrap: wrap; }
+    .carrinho .linha .btn { width: 100%; }
   }
   @media (max-width: 420px) {
     .wrap { padding: 0 16px; }
@@ -416,17 +421,22 @@
 </footer>
 
 <!-- CARRINHO (preenchido pelo script da Lumen) -->
-<div class="carrinho" id="carrinho" hidden aria-live="polite">
-  <div class="itens">
-    <span class="kicker">Seu carrinho</span>
-    <ul id="carrinho-lista"></ul>
+<div class="carrinho" id="carrinho" hidden>
+  <div class="linha">
+    <div class="resumo">
+      <span class="kicker">Seu carrinho</span>
+      <b id="carrinho-resumo" aria-live="polite"></b>
+      <button type="button" class="btn-itens" id="carrinho-toggle" aria-expanded="false" aria-controls="carrinho-lista">Ver itens</button>
+    </div>
+    <a class="btn btn-ambar" data-lumen-checkout-link>Finalizar compra
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
   </div>
-  <a class="btn btn-ambar" data-lumen-checkout-link>Finalizar compra
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-  </a>
+  <ul id="carrinho-lista" hidden></ul>
 </div>
 
-<script src="https://checkout.lumenio.com.br/lumen-cart.js" data-lumen-store="radix"></script>
+<!-- data-lumen-return: domínio cadastrado na Lumen em 16/11/2026 (www, raiz e app). -->
+<script src="https://checkout.lumenio.com.br/lumen-cart.js" data-lumen-store="radix" data-lumen-return="https://www.radixcursos.com/obrigado/"></script>
 <script>
 /* =========================================================
    CATÁLOGO — edite aqui. Fonte: contratos 2027 de cada curso
@@ -522,8 +532,8 @@ function rodapeLumen(c, ofertas) {
       <button type="button" class="btn btn-nocarrinho" data-lumen-remove="${esc(of.listingId)}">No carrinho · remover</button>`).join('');
   return `
           <div class="price"><small>${esc(c.modalidade)}</small><b>${esc(grande)}</b></div>
-          ${multi ? `<p class="price-det">${det.join('<br>')}</p><div class="acoes multi">${botoes}</div>`
-                  : `<div class="acoes">${botoes}</div><p class="price-det">${det.join('<br>')}</p>`}`;
+          <p class="price-det">${det.join('<br>')}</p>
+          <div class="acoes">${botoes}</div>`;
 }
 
 function rodapeEstatico(c) {
@@ -572,12 +582,31 @@ function sincronizarBotoes() {
 }
 
 const AVISO = { sold_out: 'Vagas esgotadas', unavailable: 'Não está mais disponível' };
+// Espaço no fim da página do tamanho da barra, para ela nunca cobrir o rodapé.
+function ajustarEspaco() {
+  const barra = document.getElementById('carrinho');
+  document.body.style.paddingBottom = barra.hidden ? '' : (barra.offsetHeight + 28) + 'px';
+}
+function abrirItens(abrir) {
+  const lista = document.getElementById('carrinho-lista');
+  const bt = document.getElementById('carrinho-toggle');
+  lista.hidden = !abrir;
+  bt.setAttribute('aria-expanded', String(abrir));
+  bt.textContent = abrir ? 'Esconder itens' : 'Ver itens';
+  ajustarEspaco();
+}
+document.getElementById('carrinho-toggle').addEventListener('click', () => abrirItens(document.getElementById('carrinho-lista').hidden));
+window.addEventListener('resize', ajustarEspaco);
+
 function desenharCarrinho() {
   const barra = document.getElementById('carrinho');
-  if (!window.LumenCart) { barra.hidden = true; return; }
+  if (!window.LumenCart) { barra.hidden = true; ajustarEspaco(); return; }
   const itens = LumenCart.details();
   barra.hidden = itens.length === 0;
-  document.body.classList.toggle('tem-carrinho', itens.length > 0);
+  const avisos = itens.filter(it => AVISO[it.status]).length;
+  document.getElementById('carrinho-resumo').textContent =
+    itens.length + (itens.length === 1 ? ' curso' : ' cursos') + (avisos ? ' · ' + avisos + ' com aviso' : '');
+  if (avisos) abrirItens(true);            // curso esgotado ou fora de venda: mostra a lista
   const lista = document.getElementById('carrinho-lista');
   lista.replaceChildren(...itens.map(it => {
     const li = document.createElement('li');
@@ -590,6 +619,7 @@ function desenharCarrinho() {
     return li;
   }));
   sincronizarBotoes();
+  ajustarEspaco();
 }
 document.addEventListener('lumen-cart:change', desenharCarrinho);
 
