@@ -163,6 +163,9 @@
   .price-det { flex-basis: 100%; font-size: 13px; color: var(--muted); line-height: 1.45; }
   .card .btn { padding: 9px 16px; font-size: 14px; min-height: 42px; }
   .price-det a { color: var(--destaque); font-weight: 700; }
+  .price .de { display: block; font-size: 14px; color: var(--muted); margin-bottom: 1px; }
+  .price .de s { text-decoration-thickness: 1.5px; }
+  .badge-bf { left: auto; right: 14px; background: var(--ambar); color: var(--noite); font-weight: 500; }
 
   /* ---------- matrícula pela Lumen ---------- */
   .acoes { display: flex; flex-direction: column; gap: 8px; flex-basis: 100%; }
@@ -482,6 +485,9 @@
 const RADIX_CURSOS = {
   whatsapp: '5584998131870',
   parcelasMax: 10,
+  // Black Friday: desconto sobre a anuidade (valor do curso, não a matrícula/material).
+  // Ponha null para desligar: some o selo, o preço riscado e o valor promocional.
+  blackFriday: 0.30,
   cursos: [
     { id: 'matematica', lumen: 'matematica', classe: 'm', nome: 'Matemática', area: 'Matemática', prof: 'Hugo Gomes', foto: 'time-hugo.webp?v=2',
       modalidade: 'Presencial + online',
@@ -541,13 +547,27 @@ const semAcento = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowe
 // "Radix Matemática 2027 — Turma da manhã (8h30 às 12h)" -> "Turma da manhã (8h30 às 12h)"
 const nomeTurma = (o, i) => o.label || (o.courseTitle.includes('—') ? o.courseTitle.split('—').pop().trim() : 'Turma ' + (i + 1));
 
+// "196.00" x 10 -> "1960.00", em centavos inteiros (sem float)
+function vezes(valor, n) {
+  const [i, c = '00'] = String(valor).split('.');
+  const cent = (parseInt(i, 10) * 100 + parseInt((c + '00').slice(0, 2), 10)) * n;
+  return Math.floor(cent / 100) + '.' + String(cent % 100).padStart(2, '0');
+}
+// "De R$ 2.800 por" (só durante a Black Friday e se o cheio for maior que o promocional)
+function deCheio(cheio, promoReais) {
+  if (!RADIX_CURSOS.blackFriday || cheio == null || !(cheio > promoReais)) return '';
+  return `<span class="de">De <s>${esc(brl(cheio))}</s> por</span>`;
+}
+
 function rodapeLumen(c, ofertas) {
   const o = ofertas[0];
   const multi = ofertas.length > 1;
   const mf = o.monthlyFee;
   const grande = mf ? mf.cycleCount + 'x de ' + brlTxt(mf.amount) : brlTxt(o.price);
+  const total = mf ? vezes(mf.amount, mf.cycleCount) : null;
+  const de = total ? deCheio(c.preco, parseFloat(total)) : '';
   const det = [];
-  if (mf) det.push(esc('no PIX' + (mf.startDate ? ', a partir de ' + dataBR(mf.startDate) : '')));
+  if (mf) det.push(esc((de ? 'Total ' + brlTxt(total) + ' no PIX' : 'no PIX') + (mf.startDate ? ', a partir de ' + dataBR(mf.startDate) : '')));
   det.push(esc((mf ? '+ matrícula (material) ' : 'Matrícula ') + brlTxt(o.price) + ', no PIX ou em até ' + (o.maxCardInstallments || 1) + 'x no cartão'));
   det.push(`<a href="${esc(LUMEN.api + '/storefront/' + LUMEN.loja + '/listings/' + o.listingId + '/contract')}" target="_blank" rel="noopener">Ver contrato</a>`);
   const botoes = ofertas.map((of, i) => `
@@ -555,17 +575,20 @@ function rodapeLumen(c, ofertas) {
       <button type="button" class="btn btn-ambar" data-lumen-add="${esc(of.listingId)}" data-lumen-title="${esc(of.courseTitle)}">Matricular ${SETA}</button>
       <button type="button" class="btn btn-nocarrinho" data-lumen-remove="${esc(of.listingId)}">No carrinho · remover</button>`).join('');
   return `
-          <div class="price"><small>${esc(c.modalidade)}</small><b>${esc(grande)}</b></div>
+          <div class="price"><small>${esc(c.modalidade)}</small>${de}<b>${esc(grande)}</b></div>
           <p class="price-det">${det.join('<br>')}</p>
           <div class="acoes">${botoes}</div>`;
 }
 
 function rodapeEstatico(c) {
   const n = RADIX_CURSOS.parcelasMax;
-  const detalhe = [c.preco == null ? '' : 'ou ' + n + 'x de ' + brl(c.preco / n), c.material, c.nota].filter(Boolean).map(esc).join('<br>');
+  const bf = RADIX_CURSOS.blackFriday;
+  const valor = c.preco == null ? null : (bf ? Math.round(c.preco * (1 - bf)) : c.preco);
+  const de = valor == null ? '' : deCheio(c.preco, valor);
+  const detalhe = [valor == null ? '' : 'ou ' + n + 'x de ' + brl(valor / n), c.material, c.nota].filter(Boolean).map(esc).join('<br>');
   const destino = zap('Olá! Quero ser avisado quando abrir a matrícula do isolado de ' + c.nome + ' em 2027.');
   return `
-          <div class="price"><small>${esc(c.modalidade)}</small>${c.preco == null ? '<b class="tbd">valor a definir</b>' : '<b>' + brl(c.preco) + '</b>'}</div>
+          <div class="price"><small>${esc(c.modalidade)}</small>${de}${valor == null ? '<b class="tbd">valor a definir</b>' : '<b>' + brl(valor) + '</b>'}</div>
           <a class="btn btn-line" href="${esc(destino)}" target="_blank" rel="noopener">Avise-me ${SETA}</a>
           ${detalhe ? `<p class="price-det">${detalhe}</p>` : ''}`;
 }
@@ -579,6 +602,7 @@ function render() {
     <article class="card ${c.classe}">
       <div class="card-foto">
         <span class="badge ${aberto ? 'open' : ''}">${aberto ? 'Matrículas abertas' : 'Em breve'}</span>
+        ${RADIX_CURSOS.blackFriday ? `<span class="badge badge-bf">Black Friday −${Math.round(RADIX_CURSOS.blackFriday * 100)}%</span>` : ''}
         <img src="${esc(c.foto)}" alt="${esc(c.prof)}" loading="lazy" width="1000" height="758">
       </div>
       <div class="card-body">
