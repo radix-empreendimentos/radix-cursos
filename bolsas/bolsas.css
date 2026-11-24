@@ -130,6 +130,11 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--ambar); out
 .cursos-op input { width: 18px; height: 18px; accent-color: var(--apoio); }
 .cursos-op label:has(input:checked) { border-color: var(--destaque); box-shadow: inset 0 0 0 1px var(--destaque); }
 .cursos-op label:has(input:disabled) { opacity: .45; cursor: not-allowed; }
+.pref { list-style: none; display: grid; gap: 8px; }
+.pref li { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border: 1px solid var(--line-2); border-radius: 10px; }
+.pref li span { flex: 1; font-weight: 500; }
+.pref button { width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--bg); color: var(--text); font-size: 18px; cursor: pointer; }
+.pref button:disabled { opacity: .35; cursor: default; }
 .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: 15px; margin-top: 10px; }
 .check input { width: 18px; height: 18px; margin-top: 3px; flex: none; accent-color: var(--apoio); }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

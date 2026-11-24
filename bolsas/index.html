@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/bolsas/bolsas.css?v=1">
+<link rel="stylesheet" href="/bolsas/bolsas.css?v=2">
 <script>try { var t = localStorage.getItem('radix-cursos-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -31,7 +31,7 @@
     <div class="wrap">
       <span class="kicker">Prova de Bolsas 2027</span>
       <h1>Sua vaga no Radix pode sair <em>de graça.</em></h1>
-      <p class="lead">41 bolsas de 100%, 50% e 30% nos isolados ENEM, presenciais e online. Você escolhe até 2 bolsas para disputar e faz uma prova com 45 questões objetivas de todas as áreas do ENEM, sem redação.</p>
+      <p class="lead">41 bolsas de 100%, 50% e 30% nos isolados ENEM, presenciais e online. Você disputa quantas quiser, pode ganhar até 2, e faz uma prova com 45 questões objetivas de todas as áreas do ENEM, sem redação.</p>
       <div class="hero-actions">
         <a class="btn btn-ambar" href="#inscricao">Fazer minha inscrição<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
         <a class="btn btn-line" href="/bolsas/edital/">Ler o edital</a>
@@ -50,10 +50,10 @@
     <div class="wrap">
       <div class="sec-head"><span class="kicker">Como funciona</span><h2>Quatro passos até a bolsa</h2></div>
       <div class="passos">
-        <div class="passo"><h3>Escolha até 2 bolsas</h3><p>Na inscrição você marca o curso e a modalidade, presencial ou online. Só concorre nas que marcou.</p></div>
+        <div class="passo"><h3>Escolha as bolsas</h3><p>Na inscrição você marca quantas opções quiser, presenciais e online, e coloca em ordem de preferência.</p></div>
         <div class="passo"><h3>Faça a prova</h3><p>45 questões em 5 horas, no dia 15/12, no Radix: 10 de Linguagens, 10 de Matemática, 10 de Humanas e 15 de Natureza.</p></div>
         <div class="passo"><h3>Nota por curso</h3><p>Cada curso pesa mais a sua matéria. Quem escolhe Física, por exemplo, tem a nota de Física com peso 4.</p></div>
-        <div class="passo"><h3>Os melhores levam</h3><p>No presencial, os 3 primeiros de cada curso ganham 100%, 50% e 30%. No online, os 4 primeiros ganham 100%, 100%, 50% e 50%.</p></div>
+        <div class="passo"><h3>Os melhores levam</h3><p>No presencial, os 3 primeiros de cada curso ganham 100%, 50% e 30%. No online, os 4 primeiros ganham 100%, 100%, 50% e 50%. Cada aluno ganha até 2 bolsas.</p></div>
       </div>
     </div>
   </section>
@@ -106,7 +106,7 @@
 
           <fieldset>
             <legend>Bolsas que você vai disputar</legend>
-            <p class="ajuda" style="margin-bottom:10px">Escolha 1 ou 2 bolsas. Não vale o mesmo curso nas duas modalidades. Depois de enviada, a escolha não muda.</p>
+            <p class="ajuda" style="margin-bottom:10px">Marque quantas quiser. Você pode ganhar até 2, em cursos diferentes. Depois de enviada, a escolha não muda.</p>
             <p class="rot" style="margin:6px 0 8px">Presencial</p>
             <div class="cursos-op" id="cursos">
               <label><input type="checkbox" name="cursos" value="matematica_p"><span class="dot" style="background:var(--mat)"></span>Matemática</label>
@@ -124,6 +124,11 @@
               <label><input type="checkbox" name="cursos" value="quimica_o"><span class="dot" style="background:var(--qui)"></span>Química</label>
               <label><input type="checkbox" name="cursos" value="biologia_o"><span class="dot" style="background:var(--bio)"></span>Biologia</label>
               <label><input type="checkbox" name="cursos" value="redacao_o"><span class="dot" style="background:var(--red)"></span>Redação</label>
+            </div>
+            <div id="bloco-pref" hidden>
+              <p class="rot" style="margin:16px 0 4px">Sua ordem de preferência</p>
+              <p class="ajuda" style="margin-bottom:8px">Se você se classificar em mais de 2, fica com as primeiras desta lista. Use as setas para ordenar.</p>
+              <ol class="pref" id="pref"></ol>
             </div>
           </fieldset>
 
@@ -206,7 +211,7 @@ const nomeOpcao = v => NOMES[v.split('_')[0]] + (v.endsWith('_o') ? ' online' : 
 const ERROS = {
   nome: 'Escreva o nome completo.', cpf: 'O CPF não é válido. Confira os números.', nascimento: 'Confira a data de nascimento.',
   email: 'Confira o e-mail.', whatsapp: 'Confira o WhatsApp, com DDD.', campos: 'Preencha cidade, escola e situação.',
-  cursos: 'Escolha 1 ou 2 bolsas para disputar.', mesmo_curso: 'Escolha cursos diferentes: o mesmo curso não pode entrar nas duas modalidades.', responsavel: 'Para menor de 18 anos, preencha nome, CPF e WhatsApp do responsável. Confira o CPF do responsável.',
+  cursos: 'Escolha pelo menos uma bolsa para disputar.', responsavel: 'Para menor de 18 anos, preencha nome, CPF e WhatsApp do responsável. Confira o CPF do responsável.',
   aceite: 'Para se inscrever, marque que leu e aceita o edital.',
   cpf_duplicado: 'Já existe uma inscrição com este CPF. Se precisar de ajuda, chame no WhatsApp (84) 99813-1870.',
   esgotada: 'As 300 vagas da prova foram preenchidas.', encerrada: 'As inscrições foram encerradas em 10/12.',
@@ -237,17 +242,31 @@ function menorNaProva() { const v = $('nascimento').value; return !!v && v > '20
 $('nascimento').addEventListener('change', () => { $('bloco-resp').hidden = !menorNaProva(); });
 
 const caixas = [...document.querySelectorAll('input[name=cursos]')];
+caixas.forEach(c => { c.checked = false; });
+let ordem = [];   // opções marcadas, na ordem de preferência
+function mostraPref(foco) {
+  $('bloco-pref').hidden = !ordem.length;
+  $('pref').innerHTML = ordem.map((v, i) => '<li><span>' + (i + 1) + 'ª · ' + nomeOpcao(v) + '</span>' +
+    '<button type="button" data-v="' + v + '" data-d="-1" aria-label="Subir ' + nomeOpcao(v) + '"' + (i === 0 ? ' disabled' : '') + '>&#8593;</button>' +
+    '<button type="button" data-v="' + v + '" data-d="1" aria-label="Descer ' + nomeOpcao(v) + '"' + (i === ordem.length - 1 ? ' disabled' : '') + '>&#8595;</button></li>').join('');
+  if (foco) { const b = [...$('pref').querySelectorAll('button')].filter(x => x.dataset.v === foco[0] && !x.disabled); (b.find(x => x.dataset.d === foco[1]) || b[0] || $('pref')).focus(); }
+}
 caixas.forEach(c => c.addEventListener('change', () => {
-  const marcadas = caixas.filter(x => x.checked);
-  const cursosMarcados = marcadas.map(x => x.value.split('_')[0]);
-  caixas.forEach(x => { x.disabled = !x.checked && (marcadas.length >= 2 || cursosMarcados.includes(x.value.split('_')[0])); });
+  ordem = c.checked ? ordem.concat(c.value) : ordem.filter(v => v !== c.value);
+  mostraPref();
 }));
+$('pref').addEventListener('click', ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  const i = ordem.indexOf(b.dataset.v), j = i + Number(b.dataset.d);
+  if (i < 0 || j < 0 || j >= ordem.length) return;
+  [ordem[i], ordem[j]] = [ordem[j], ordem[i]]; mostraPref([b.dataset.v, b.dataset.d]);
+});
 
 function erro(txt, foco) { const m = $('msg'); m.textContent = txt; m.className = 'msg erro'; if (foco) $(foco).focus(); else m.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
 
 $('form').addEventListener('submit', async ev => {
   ev.preventDefault(); $('msg').className = 'msg';
-  const cursos = caixas.filter(x => x.checked).map(x => x.value);
+  const cursos = ordem.slice();
   const d = {
     nome: $('nome').value.trim().replace(/\s+/g, ' '), cpf: dig($('cpf').value), nascimento: $('nascimento').value,
     whatsapp: dig($('whatsapp').value), email: $('email').value.trim(), cidade: $('cidade').value.trim(),
@@ -274,7 +293,7 @@ $('form').addEventListener('submit', async ev => {
     if (r && r.ok) {
       $('form').hidden = true; $('sucesso').hidden = false;
       $('numero').textContent = String(r.numero);
-      $('sucesso-cursos').textContent = 'Bolsas em disputa: ' + cursos.map(nomeOpcao).join(' e ') + '.';
+      $('sucesso-cursos').textContent = 'Bolsas em disputa, por preferência: ' + cursos.map((v, i) => (i + 1) + 'ª ' + nomeOpcao(v)).join(', ') + '.';
       $('sucesso').scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
       erro(ERROS[r && r.erro] || ERROS.invalido);
