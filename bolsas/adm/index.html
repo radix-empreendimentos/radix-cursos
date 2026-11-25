@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Administração · Prova de Bolsas Radix 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/bolsas/bolsas.css?v=2">
+<link rel="stylesheet" href="/bolsas/area.css?v=1">
+<script>try { var t = localStorage.getItem('radix-cursos-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/bolsas" aria-label="Prova de Bolsas"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect width="40" height="40" rx="7.6" fill="#0A0A0A"/><polyline points="11,28.8 12.5,27.6 20.6,33.5 22.2,9.4 29,6.5" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>radix</b><small>cursos</small></span></a>
+  <button class="btn btn-line sair" id="sair" type="button" hidden>Sair</button>
+</div></header>
+<main class="wrap area">
+  <section id="entrada">
+    <span class="kicker">Prova de Bolsas 2027</span><h1>Administração</h1>
+    <p class="lead">Use o e-mail e a senha de professor do app Radix.</p>
+    <form class="form-card estreito" id="login">
+      <div class="campo"><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required></div>
+      <div class="campo"><label for="senha">Senha</label><input id="senha" type="password" autocomplete="current-password" required></div>
+      <button class="btn btn-ambar" type="submit">Entrar</button>
+    </form>
+    <form class="form-card estreito" id="mfa" hidden>
+      <div class="campo"><label for="codigo">Código do aplicativo autenticador</label><input id="codigo" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required></div>
+      <button class="btn btn-ambar" type="submit">Confirmar</button>
+    </form>
+  </section>
+  <section id="painel" hidden>
+    <span class="kicker">Prova de Bolsas 2027</span><h1>Administração</h1>
+    <div class="abas" role="tablist" id="abas"></div>
+    <div id="conteudo"></div>
+  </section>
+  <div class="msg" id="msg" role="status"></div>
+</main>
+<dialog id="ficha"></dialog>
+<script src="/bolsas/area.js?v=1"></script>
+<script>
+let TK = null, D = null, aba = 'inscritos', pendente = null, filtro = { q: '', o: '', s: '' };
+const ABAS = [['inscritos', 'Inscritos'], ['salas', 'Salas'], ['correcao', 'Correção'], ['resultado', 'Resultado'], ['publicar', 'Publicar']];
+const ERR = { gabarito: 'O gabarito precisa ter 45 letras: A a E, ou X para anulada.', publicado: 'O resultado está publicado. Retire do ar antes de mudar.', apurar: 'Apure o resultado antes de publicar.', esgotada: 'As 300 vagas estão ocupadas.', numero: 'Inscrição não encontrada.' };
+const ER2 = 'Não deu certo. Confira a internet e tente de novo.';
+function aviso(t, bom) { const m = $('msg'); m.textContent = t || ''; m.className = t ? 'msg ' + (bom ? 'bom' : 'erro') : 'msg'; }
+async function auth(cam, corpo, tk) {
+  const r = await fetch(SB.url + '/auth/v1/' + cam, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SB.key, ...(tk ? { Authorization: 'Bearer ' + tk } : {}) }, body: JSON.stringify(corpo || {}) });
+  const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j.error_code || j.msg || 'erro'); e.status = r.status; throw e; } return j;
+}
+async function chama(nome, corpo) {
+  try { return await rpc(nome, corpo, TK); }
+  catch (e) { if (e.status === 401) { sai(); aviso('A sessão terminou. Entre de novo.'); } throw e; }
+}
+async function faz(nome, corpo, txt) {
+  aviso('');
+  try { const r = await chama(nome, corpo); if (r && r.ok === false) { aviso((ERR[r.erro] || 'Não foi possível salvar.') + (r.linhas ? ' Confira os números: ' + r.linhas.join(', ') + '.' : '')); return null; }
+    await carrega(); if (txt) aviso(txt, true); return r || { ok: true }; }
+  catch (e) { if (e.status !== 401) aviso(ER2); return null; }
+}
+function sai() { TK = null; D = null; pendente = null; $('conteudo').innerHTML = ''; $('ficha').innerHTML = ''; if ($('ficha').open) $('ficha').close(); $('painel').hidden = true; $('sair').hidden = true; $('mfa').hidden = true; $('login').hidden = false; $('entrada').hidden = false; $('login').reset(); $('mfa').reset(); }
+$('sair').onclick = () => { const t = TK; sai(); aviso(''); if (t) auth('logout?scope=local', {}, t).catch(() => {}); };
+$('login').onsubmit = async ev => {
+  ev.preventDefault(); aviso('');
+  try {
+    const s = await auth('token?grant_type=password', { email: $('email').value.trim(), password: $('senha').value });
+    $('senha').value = '';
+    const f = ((s.user && s.user.factors) || []).find(x => x.factor_type === 'totp' && x.status === 'verified');
+    if (f) { pendente = { tk: s.access_token, id: f.id }; $('login').hidden = true; $('mfa').hidden = false; $('codigo').focus(); } else await entra(s.access_token);
+  } catch (e) { aviso(e.status === 400 ? 'E-mail ou senha não conferem.' : 'Não foi possível entrar agora (' + e.message + ').'); }
+};
+$('mfa').onsubmit = async ev => {
+  ev.preventDefault(); aviso('');
+  try { const c = await auth('factors/' + pendente.id + '/challenge', {}, pendente.tk);
+    const s = await auth('factors/' + pendente.id + '/verify', { challenge_id: c.id, code: dig($('codigo').value) }, pendente.tk); await entra(s.access_token); }
+  catch (e) { $('codigo').value = ''; aviso('O código não confere. Tente o próximo que aparecer no aplicativo.'); }
+};
+async function entra(tk) {
+  TK = tk;
+  try { await carrega(); } catch (e) { sai(); aviso(e.status === 403 || e.status === 401 ? 'Esta conta não tem acesso à administração.' : ER2); return; }
+  $('entrada').hidden = true; $('painel').hidden = false; $('sair').hidden = false;
+}
+async function carrega() { D = await chama('bolsas2027_adm_dados'); desenha(); }
+const ativos = () => D.inscritos.filter(i => i.status !== 'cancelado');
+const data = s => s ? s.slice(0, 10).split('-').reverse().join('/') : '';
+function desenha() {
+  $('abas').innerHTML = ABAS.map(([k, n]) => `<button role="tab" aria-selected="${k === aba}" data-k="${k}">${n}</button>`).join('');
+  $('abas').querySelectorAll('button').forEach(b => b.onclick = () => { aba = b.dataset.k; aviso(''); desenha(); });
+  ({ inscritos, salas, correcao, resultado, publicar })[aba]();
+}
+/* ---------- inscritos ---------- */
+function inscritos() {
+  const A = ativos(), hoje = new Date().toLocaleDateString('en-CA'), h = A.filter(i => new Date(i.criado_em).toLocaleDateString('en-CA') === hoje).length;
+  $('conteudo').innerHTML = `<div class="nums"><div><b>${A.length}</b><span>inscritos</span></div><div><b>${300 - A.length}</b><span>vagas livres</span></div><div><b>${h}</b><span>hoje</span></div><div><b>${A.filter(i => i.atendimento_especial).length}</b><span>atendimento especializado</span></div></div>
+    <details class="cartao" style="margin-bottom:18px"><summary>Procura por opção</summary><div class="tabela-wrap" style="margin-top:12px"><table><thead><tr><th>Opção</th><th class="num">Marcaram</th><th class="num">1ª preferência</th></tr></thead><tbody>${OPCOES.map(o => `<tr><td>${nomeOpcao(o)}</td><td class="num">${A.filter(i => i.cursos.includes(o)).length}</td><td class="num">${A.filter(i => i.cursos[0] === o).length}</td></tr>`).join('')}</tbody></table></div></details>
+    <div class="barra"><input id="q" type="search" placeholder="Nome, número, CPF ou escola" aria-label="Buscar" value="${esc(filtro.q)}">
+    <select id="fo" aria-label="Opção"><option value="">Todas as opções</option>${OPCOES.map(o => `<option value="${o}" ${filtro.o === o ? 'selected' : ''}>${nomeOpcao(o)}</option>`).join('')}</select>
+    <select id="fs" aria-label="Situação">${[['', 'Todos'], ['inscrito', 'Ativos'], ['cancelado', 'Cancelados'], ['esp', 'Atendimento especializado']].map(([v, n]) => `<option value="${v}" ${filtro.s === v ? 'selected' : ''}>${n}</option>`).join('')}</select>
+    <button class="btn btn-line" id="csv" type="button">Baixar planilha</button><button class="btn btn-line" id="atual" type="button">Atualizar</button></div><div id="tab"></div>`;
+  $('q').oninput = e => { filtro.q = e.target.value; tabela(); }; $('fo').onchange = e => { filtro.o = e.target.value; tabela(); }; $('fs').onchange = e => { filtro.s = e.target.value; tabela(); };
+  $('csv').onclick = csv; $('atual').onclick = () => carrega().then(() => aviso('Lista atualizada.', true)).catch(() => aviso(ER2)); tabela();
+}
+const semAc = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function filtrados() {
+  const q = semAc(filtro.q.trim()), qd = dig(filtro.q);
+  return D.inscritos.filter(i => (!filtro.o || i.cursos.includes(filtro.o)) && (!filtro.s || (filtro.s === 'esp' ? i.atendimento_especial : i.status === filtro.s)) &&
+    (!q || semAc(i.nome + ' ' + i.escola + ' ' + i.cidade).includes(q) || (qd && (String(i.numero).includes(qd) || i.cpf.includes(qd)))));
+}
+function tabela() {
+  const l = filtrados();
+  $('tab').innerHTML = `<p class="nota" style="margin:0 0 8px">${l.length} na lista. Toque numa linha para abrir a ficha.</p><div class="tabela-wrap"><table><thead><tr><th>Nº</th><th>Nome</th><th>Escola</th><th class="num">Opções</th><th>1ª preferência</th><th>Sala</th><th>Inscrição</th></tr></thead><tbody>${l.map(i =>
+    `<tr class="clic ${i.status === 'cancelado' ? 'cancelado' : ''}" data-n="${i.numero}" tabindex="0"><td>${i.numero}</td><td>${esc(i.nome)}</td><td>${esc(i.escola)}</td><td class="num">${i.cursos.length}</td><td>${nomeOpcao(i.cursos[0])}</td><td>${esc(i.sala || '')}</td><td>${new Date(i.criado_em).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td></tr>`).join('') || '<tr><td colspan="7">Ninguém com esse filtro.</td></tr>'}</tbody></table></div>`;
+  $('tab').querySelectorAll('tr.clic').forEach(t => { t.onclick = () => ficha(+t.dataset.n); t.onkeydown = e => { if (e.key === 'Enter') ficha(+t.dataset.n); }; });
+}
+function ficha(n) {
+  const i = D.inscritos.find(x => x.numero === n), L = (k, v) => v ? `<dt>${k}</dt><dd>${v}</dd>` : '', zap = z => z ? `<a href="https://wa.me/55${dig(z)}" target="_blank" rel="noopener noreferrer">${esc(z)}</a>` : '';
+  $('ficha').innerHTML = `<h2>${i.numero} · ${esc(i.nome)}</h2><dl>${L('Situação', i.status === 'cancelado' ? 'Cancelada' : 'Inscrito')}${L('CPF', esc(i.cpf))}${L('Nascimento', data(i.nascimento))}${L('WhatsApp', zap(i.whatsapp))}${L('E-mail', esc(i.email))}${L('Cidade', esc(i.cidade))}${L('Escola', esc(i.escola))}${L('Série', esc(i.situacao))}${L('Responsável', esc(i.responsavel_nome))}${L('CPF do resp.', esc(i.responsavel_cpf))}${L('WhatsApp do resp.', zap(i.responsavel_whatsapp))}${L('Atendimento', esc(i.atendimento_especial))}${L('Uso de imagem', i.aceite_imagem ? 'Autorizou' : 'Não autorizou')}${L('Preferências', i.cursos.map((c, k) => (k + 1) + 'ª ' + nomeOpcao(c)).join('<br>'))}</dl>
+    <div class="campo"><label for="fsala">Sala</label><input id="fsala" type="text" maxlength="40" value="${esc(i.sala || '')}"></div><div class="campo" style="margin:12px 0"><label for="fobs">Observação interna</label><textarea id="fobs" maxlength="500">${esc(i.observacao || '')}</textarea></div>
+    <div class="barra"><button class="btn btn-ambar" id="fsalva">Salvar</button><button class="btn btn-line" id="fecha">Fechar</button><button class="btn btn-line" id="fcanc">${i.status === 'cancelado' ? 'Reativar inscrição' : 'Cancelar inscrição'}</button></div>`;
+  $('ficha').showModal(); $('fecha').onclick = () => $('ficha').close();
+  $('fsalva').onclick = async () => { const d = { sala: $('fsala').value, observacao: $('fobs').value }; $('ficha').close(); await faz('bolsas2027_adm_salvar', { p_numero: n, d }, 'Ficha salva.'); };
+  $('fcanc').onclick = async () => { const c = i.status !== 'cancelado'; if (!confirm(c ? 'Cancelar a inscrição ' + n + '? A vaga volta a ficar livre.' : 'Reativar a inscrição ' + n + '?')) return; $('ficha').close(); await faz('bolsas2027_adm_salvar', { p_numero: n, d: { status: c ? 'cancelado' : 'inscrito' } }, c ? 'Inscrição cancelada.' : 'Inscrição reativada.'); };
+}
+const fcpf = c => c ? c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : '';
+function baixa(nome, linhas) {
+  const c = v => { let s = String(v ?? ''); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + linhas.map(l => l.map(c).join(';')).join('\r\n')], { type: 'text/csv' })); a.download = nome; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+function csv() {
+  baixa('Prova de Bolsas 2027 - Inscritos.csv', [['Número', 'Nome', 'Situação', 'CPF', 'Nascimento', 'WhatsApp', 'E-mail', 'Cidade', 'Escola', 'Série', 'Responsável', 'CPF do responsável', 'WhatsApp do responsável', 'Atendimento', 'Sala', 'Observação', 'Inscrição', 'Preferências']].concat(filtrados().map(i =>
+    [i.numero, i.nome, i.status, fcpf(i.cpf), data(i.nascimento), i.whatsapp, i.email, i.cidade, i.escola, i.situacao, i.responsavel_nome, fcpf(i.responsavel_cpf), i.responsavel_whatsapp, i.atendimento_especial, i.sala, i.observacao, new Date(i.criado_em).toLocaleString('pt-BR'), i.cursos.map((c, k) => (k + 1) + 'ª ' + nomeOpcao(c)).join(', ')])));
+}
+/* ---------- salas ---------- */
+function salas() {
+  const A = ativos(), g = {}; A.forEach(i => (g[i.sala || 'Sem sala'] ??= []).push(i));
+  $('conteudo').innerHTML = `<p class="lead">Escreva uma sala por linha, com o número de lugares. A divisão é por ordem alfabética.</p>
+    <div class="campo"><label for="ts">Salas</label><textarea id="ts" class="mono" placeholder="Sala 1: 35&#10;Sala 2: 35"></textarea></div>
+    <div class="barra" style="margin-top:12px"><button class="btn btn-ambar" id="dist">Distribuir</button><button class="btn btn-line" id="lista">Baixar listas por sala</button></div>
+    <p class="nota">Quem pediu atendimento especializado entra na divisão normal: ajuste na ficha. O aluno só vê a sala depois de publicada.</p>
+    <div class="colunas">${Object.keys(g).sort((a, b) => a.localeCompare(b, 'pt-BR', { numeric: true })).map(s => `<div class="cartao"><h3>${esc(s)} (${g[s].length})</h3><p class="nota">${g[s].filter(i => i.atendimento_especial).map(i => 'Atendimento: ' + i.numero).join('<br>')}</p></div>`).join('')}</div>`;
+  $('dist').onclick = async () => {
+    const S = []; for (const l of $('ts').value.split('\n').map(x => x.trim()).filter(Boolean)) { const m = l.match(/^(.+?)\s*[:;]\s*(\d+)$/); if (!m) return aviso('Confira a linha "' + l + '". O formato é Sala 1: 35.'); S.push([m[1], +m[2]]); }
+    const lug = S.reduce((s, x) => s + x[1], 0); if (lug < A.length) return aviso('São ' + A.length + ' inscritos e só ' + lug + ' lugares.');
+    if (!confirm('Distribuir ' + A.length + ' inscritos em ' + S.length + ' salas? A divisão atual será substituída.')) return;
+    const o = [...A].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')), d = {}; let k = 0; for (const [n, q] of S) for (let j = 0; j < q && k < o.length; j++) d[o[k++].numero] = n;
+    await faz('bolsas2027_adm_salas', { d }, 'Salas distribuídas.');
+  };
+  $('lista').onclick = () => baixa('Prova de Bolsas 2027 - Listas por sala.csv', [['Sala', 'Número', 'Nome', 'Assinatura']].concat([...A].sort((a, b) => (a.sala || 'zz').localeCompare(b.sala || 'zz', 'pt-BR', { numeric: true }) || a.nome.localeCompare(b.nome, 'pt-BR')).map(i => [i.sala, i.numero, i.nome, ''])));
+}
+/* ---------- correção ---------- */
+function correcao() {
+  const c = D.config, falt = ativos().filter(i => !i.presente);
+  $('conteudo').innerHTML = `<div class="nums"><div><b>${D.respostas}</b><span>cartões lançados</span></div><div><b>${falt.length}</b><span>sem cartão</span></div><div><b>${c.gabarito ? 'Sim' : 'Não'}</b><span>gabarito salvo</span></div></div>
+    <h2>Gabarito</h2><p class="nota" style="margin:0 0 8px">45 letras, na ordem: 1 a 10 Linguagens, 11 a 20 Matemática, 21 a 30 Humanas, 31 a 35 Física, 36 a 40 Química, 41 a 45 Biologia. Use X para anulada.</p>
+    <input id="g" type="text" aria-label="Gabarito" value="${esc(c.gabarito || '')}" style="font-family:'IBM Plex Mono',monospace"><p class="nota" id="gn"></p><button class="btn btn-ambar" id="gs">Salvar gabarito</button>
+    <h2>Cartões-resposta</h2><p class="nota" style="margin:0 0 8px">Uma linha por candidato: número, ponto e vírgula e as 45 respostas. Use - para branco, rasura ou dupla marcação. Pode colar direto da planilha.</p>
+    <textarea id="r" class="mono" aria-label="Cartões-resposta" placeholder="1001;ABCDEABCDE..."></textarea><div class="barra" style="margin-top:12px"><button class="btn btn-ambar" id="rs">Lançar cartões</button><button class="btn btn-line" id="rx">Excluir um cartão</button></div>
+    ${D.respostas && falt.length ? `<details class="cartao"><summary>Sem cartão (${falt.length})</summary><p>${falt.map(i => i.numero + ' ' + esc(i.nome)).join('<br>')}</p></details>` : ''}`;
+  const cont = () => { $('gn').textContent = $('g').value.replace(/[^A-Za-z]/g, '').length + ' de 45 letras'; }; $('g').oninput = cont; cont();
+  $('gs').onclick = () => { if (!c.apurado_em || confirm('Mudar o gabarito apaga a apuração atual. Continuar?')) faz('bolsas2027_adm_gabarito', { g: $('g').value }, 'Gabarito salvo.'); };
+  $('rs').onclick = async () => {
+    const d = {}, ruim = []; for (const l of $('r').value.split('\n').map(x => x.trim()).filter(Boolean)) { const m = l.match(/^(\d+)[\s;,]+(.*)$/), t = m && m[2].toUpperCase().replace(/[\s;,]/g, ''); if (!m || !/^[A-E-]{45}$/.test(t) || d[m[1]]) ruim.push(l.slice(0, 14)); else d[m[1]] = t; }
+    if (ruim.length) return aviso('Nada foi lançado. Linhas com problema (não há 45 respostas, há letra inválida ou o número repete): ' + ruim.slice(0, 8).join(' | '));
+    const n = Object.keys(d).length; if (!n) return aviso('Cole ao menos uma linha.');
+    const ja = Object.keys(d).filter(k => D.inscritos.some(i => i.numero === +k && i.presente)).length;
+    if (ja && !confirm(ja + ' cartão(ões) já lançado(s) serão substituídos. Continuar?')) return;
+    await faz('bolsas2027_adm_respostas', { d }, n + ' cartão(ões) lançado(s).');
+  };
+  $('rx').onclick = () => { const n = prompt('Número de inscrição do cartão a excluir:'); if (n && /^\d+$/.test(n.trim()) && confirm('Excluir o cartão ' + n + '?')) faz('bolsas2027_adm_excluir_resposta', { p_numero: +n }, 'Cartão excluído.'); };
+}
+/* ---------- resultado ---------- */
+function resultado() {
+  const c = D.config, nome = n => esc((D.inscritos.find(i => i.numero === n) || {}).nome), R = D.resultado;
+  $('conteudo').innerHTML = `<p class="lead">A apuração calcula as notas com os pesos do edital e distribui as bolsas pela ordem de preferência. Pode ser refeita até você publicar.</p>
+    <div class="barra"><button class="btn btn-ambar" id="ap">Apurar resultado</button><button class="btn btn-line" id="bx" ${R.length ? '' : 'disabled'}>Baixar planilha</button></div>
+    ${c.apurado_em ? `<p class="nota">Apurado em ${new Date(c.apurado_em).toLocaleString('pt-BR')}: ${R.filter(x => x.situacao === 'contemplado').length} bolsas distribuídas.</p>` : '<p class="nota">Ainda não apurado.</p>'}
+    <div class="colunas">${R.length ? OPCOES.map(o => { const l = R.filter(x => x.opcao === o), w = l.filter(x => x.situacao === 'contemplado'), s = l.filter(x => x.situacao === 'suplente');
+      return `<div class="cartao"><h3>${nomeOpcao(o)}</h3>${w.map(x => `<p><b>${x.bolsa}%</b> · ${x.numero} ${nome(x.numero)} · ${x.nota}</p>`).join('') || '<p>Sem contemplado.</p>'}${s.length ? `<details><summary>Suplentes (${s.length})</summary>${s.map(x => `<p>${x.posicao}º · ${x.numero} ${nome(x.numero)} · ${x.nota}</p>`).join('')}</details>` : ''}</div>`; }).join('') : ''}</div>`;
+  $('ap').onclick = () => faz('bolsas2027_adm_apurar', {}, 'Resultado apurado.');
+  $('bx').onclick = () => baixa('Prova de Bolsas 2027 - Resultado.csv', [['Opção', 'Posição', 'Número', 'Nome', 'WhatsApp', 'Nota', 'Situação', 'Bolsa']].concat(R.map(x => { const i = D.inscritos.find(y => y.numero === x.numero); return [nomeOpcao(x.opcao), x.posicao, x.numero, i.nome, i.whatsapp, x.nota, x.situacao, x.bolsa ? x.bolsa + '%' : '']; })));
+}
+/* ---------- publicar ---------- */
+function publicar() {
+  const c = D.config, K = [['salas', 'Salas', 'Cada aluno vê a própria sala.'], ['gabarito', 'Gabarito', 'Aparece para todos. O aluno também vê as respostas lançadas no cartão. No edital: 15/12, a partir das 20h.'], ['resultado', 'Resultado final', 'Cada aluno vê nota e bolsa; a lista pública sai só por número. No edital: 18/12.']];
+  $('conteudo').innerHTML = `<p class="lead">O aluno só vê o que você publicar aqui.</p>` + K.map(([k, n, t]) => { const v = c[k === 'salas' ? 'salas_publicadas' : k + '_publicado']; return `<div class="chave"><div><b>${n}: ${v ? 'no ar' : 'fora do ar'}</b><p>${t}</p></div><button class="btn ${v ? 'btn-line' : 'btn-ambar'}" data-k="${k}" data-v="${v ? '' : 1}">${v ? 'Tirar do ar' : 'Publicar'}</button></div>`; }).join('');
+  $('conteudo').querySelectorAll('button[data-k]').forEach(b => b.onclick = () => { const v = !!b.dataset.v, n = K.find(x => x[0] === b.dataset.k)[1]; if (confirm((v ? 'Publicar: ' : 'Tirar do ar: ') + n + '?')) faz('bolsas2027_adm_publicar', { p_o_que: b.dataset.k, p_valor: v }, n + (v ? ': no ar.' : ': fora do ar.')); });
+}
+</script>
+</body>
+</html>

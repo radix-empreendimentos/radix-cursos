@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Área do candidato · Prova de Bolsas Radix 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/bolsas/bolsas.css?v=2">
+<link rel="stylesheet" href="/bolsas/area.css?v=1">
+<script>try { var t = localStorage.getItem('radix-cursos-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Radix Cursos, início"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect width="40" height="40" rx="7.6" fill="#0A0A0A"/><polyline points="11,28.8 12.5,27.6 20.6,33.5 22.2,9.4 29,6.5" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>radix</b><small>cursos</small></span></a>
+  <nav aria-label="Páginas"><a href="/bolsas">Prova de Bolsas</a><a href="/bolsas/edital/">Edital</a></nav>
+  <button class="btn btn-line sair" id="sair" type="button" hidden>Sair</button>
+</div></header>
+<main class="wrap area">
+  <section id="entrada">
+    <span class="kicker">Prova de Bolsas 2027</span>
+    <h1>Área do candidato</h1>
+    <p class="lead">Entre com o CPF e a data de nascimento usados na inscrição. Não precisa de senha.</p>
+    <form class="form-card estreito" id="form" novalidate autocomplete="off">
+      <div class="campo"><label for="cpf">CPF do candidato</label><input id="cpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00"></div>
+      <div class="campo"><label for="nasc">Data de nascimento</label><input id="nasc" type="date" min="1950-01-01" max="2016-12-31"></div>
+      <button class="btn btn-ambar" id="entrar" type="submit">Entrar</button>
+      <div class="msg" id="msg" role="alert"></div>
+    </form>
+    <p class="nota">Ainda não se inscreveu? <a href="/bolsas#inscricao">Faça a inscrição até 10/12</a>. Dúvidas: <a href="https://wa.me/5584998131870">WhatsApp (84) 99813-1870</a>.</p>
+  </section>
+  <section id="painel" hidden></section>
+  <section id="publico" hidden></section>
+</main>
+<footer><div class="wrap"><p>Mossoró, RN / desde 2010 · <a href="https://wa.me/5584998131870">(84) 99813-1870</a> · @radixcursos</p></div></footer>
+<script src="/bolsas/area.js?v=1"></script>
+<script>
+const MSG = {
+  cpf: 'O CPF não é válido. Confira os números.', nascimento: 'Preencha a data de nascimento.',
+  nao_encontrado: 'Não encontramos inscrição com esse CPF e essa data de nascimento. Confira os dois.',
+  bloqueado: 'Foram muitas tentativas. Espere 15 minutos e tente de novo.'
+};
+const SIT = { contemplado: 'Contemplado', suplente: 'Suplente', desconsiderado: 'Bolsa em outra opção', abaixo: 'Abaixo de 400 pontos' };
+$('cpf').addEventListener('input', e => { const d = dig(e.target.value).slice(0, 11); e.target.value = d.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2'); });
+$('sair').addEventListener('click', () => location.reload());
+$('form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const m = $('msg'); m.className = 'msg';
+  const erro = t => { m.textContent = t; m.className = 'msg erro'; };
+  const cpf = dig($('cpf').value), nascimento = $('nasc').value;
+  if (cpf.length !== 11) return erro(MSG.cpf);
+  if (!nascimento) return erro(MSG.nascimento);
+  $('entrar').disabled = true;
+  try {
+    const r = await rpc('bolsas2027_aluno', { d: { cpf, nascimento } });
+    if (!r.ok) return erro(MSG[r.erro] || 'Não foi possível entrar.');
+    $('form').reset(); mostra(r);
+  } catch (e) { erro('Não conseguimos entrar agora. Confira a internet e tente de novo.'); }
+  finally { $('entrar').disabled = false; }
+});
+function mostra(r) {
+  $('entrada').hidden = true; $('publico').hidden = true; $('sair').hidden = false; $('painel').hidden = false;
+  let h = `<span class="kicker">Prova de Bolsas 2027</span><h1>${esc(r.nome.split(' ')[0])}, sua inscrição é a ${esc(r.numero)}</h1>`;
+  if (r.status === 'cancelado') {
+    $('painel').innerHTML = h + '<p class="lead">Esta inscrição está cancelada. Se não foi você que pediu, chame no <a href="https://wa.me/5584998131870">WhatsApp (84) 99813-1870</a>.</p>'; return;
+  }
+  if (r.publicado) h += resultado(r);
+  h += `<div class="cal"><div class="forte"><b>15/12, terça</b><span>Portões das 12h às 13h. Prova das 13h30 às 18h30.</span></div>
+    <div><b>${r.sala ? esc(r.sala) : 'Sala a definir'}</b><span>${r.sala ? 'Sua sala na prova.' : 'Aparece aqui até 12/12.'}</span></div>
+    <div><b>Rua Doutor João Marcelino, 173</b><span>Nova Betânia, Mossoró.</span></div></div>`;
+  if (!r.publicado) h += `<h2>O que levar</h2><ul class="lista"><li>Documento oficial com foto, original.</li><li>Caneta preta de material transparente.</li><li>Água e lanche em embalagem transparente, sem rótulo.</li><li>Celular, relógio e calculadora não podem ser usados.</li></ul>` +
+    (r.atendimento ? '<p class="nota">Você pediu atendimento especializado. Envie o laudo ou documento pelo WhatsApp (84) 99813-1870 até 10/12.</p>' : '');
+  h += `<h2>Suas opções, por preferência</h2><ol class="lista">${r.cursos.map(c => `<li>${esc(nomeOpcao(c))}</li>`).join('')}</ol>`;
+  if (r.gabarito) h += gabarito(r.gabarito, r.respostas) + (r.publicado ? '' : '<p class="nota">Gabarito preliminar. Recursos até 17/12, às 23h59, pelo WhatsApp (84) 99813-1870, com o número de inscrição, a questão e a justificativa.</p>');
+  $('painel').innerHTML = h; scrollTo(0, 0);
+}
+function resultado(r) {
+  if (!r.acertos) return '<div class="aviso">Não há cartão-resposta seu nesta prova. Se você fez a prova, chame no WhatsApp (84) 99813-1870.</div>';
+  const g = r.resultado.filter(x => x.situacao === 'contemplado');
+  let h = g.length ? `<div class="aviso bom"><b>Você ganhou ${g.length === 1 ? 'uma bolsa' : 'duas bolsas'}.</b><br>${g.map(x => `${x.bolsa}% em ${esc(nomeOpcao(x.opcao))}`).join('<br>')}<br><span>Faça a matrícula em 21, 22, 23, 28 ou 29/12.</span></div>`
+    : `<div class="aviso">${r.resultado.some(x => x.situacao === 'suplente') ? 'Você está na lista de suplentes. Se uma bolsa ficar vaga, o aviso chega pelo WhatsApp ou e-mail.' : 'Você não ficou entre os contemplados desta vez. Obrigado por participar.'}</div>`;
+  const a = r.acertos, A = [['Linguagens', a.l, 10], ['Matemática', a.m, 10], ['Humanas', a.h, 10], ['Física', a.f, 5], ['Química', a.q, 5], ['Biologia', a.b, 5]];
+  h += `<h2>Seus acertos: ${a.total} de 45</h2><div class="barras">${A.map(([n, v, t]) => `<div><span>${n}</span><i><u style="width:${100 * v / t}%"></u></i><b>${v}/${t}</b></div>`).join('')}</div>
+    <h2>Resultado por opção</h2><div class="tabela-wrap"><table><thead><tr><th>Opção</th><th class="num">Nota</th><th class="num">Posição</th><th>Situação</th></tr></thead><tbody>${r.resultado.map(x =>
+      `<tr><td>${esc(nomeOpcao(x.opcao))}</td><td class="num">${x.nota}</td><td class="num">${x.posicao ? x.posicao + 'º de ' + x.de : '–'}</td><td>${x.situacao === 'contemplado' ? `<b>Bolsa de ${x.bolsa}%</b>` : SIT[x.situacao]}</td></tr>`).join('')}</tbody></table></div>
+    <p class="nota">A nota vai de 0 a 1.000 e usa os pesos do curso. Cada pessoa ganha até 2 bolsas, em cursos diferentes, pela ordem de preferência.</p>`;
+  return h;
+}
+(async () => {
+  try {
+    const p = await rpc('bolsas2027_publico'); if (!p.gabarito && !p.resultado) return;
+    let h = '';
+    if (p.resultado) {
+      h += '<h2>Resultado final</h2><p class="nota">Por número de inscrição, conforme o edital.</p><div class="colunas">' + OPCOES.map(o => {
+        const l = p.resultado.filter(x => x.opcao === o), c = l.filter(x => x.situacao === 'contemplado'), s = l.filter(x => x.situacao === 'suplente');
+        return `<div class="cartao"><h3>${esc(nomeOpcao(o))}</h3>${c.map(x => `<p><b>${x.bolsa}%</b> · ${x.numero}</p>`).join('') || '<p>Sem contemplado.</p>'}${s.length ? `<details><summary>Suplentes (${s.length})</summary><p>${s.map(x => x.numero).join(', ')}</p></details>` : ''}</div>`; }).join('') + '</div>';
+    }
+    if (p.gabarito) h += gabarito(p.gabarito);
+    $('publico').innerHTML = h; if ($('painel').hidden) $('publico').hidden = false;
+  } catch (e) { /* sem lista pública: o login segue funcionando */ }
+})();
+</script>
+</body>
+</html>
