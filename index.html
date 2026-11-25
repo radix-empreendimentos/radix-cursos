@@ -117,9 +117,9 @@
   .hero-facts span { font: 400 12px 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: #A9B3C2; }
   /* grafismo: radical âmbar sobre grade */
   .grafismo {
-    aspect-ratio: 1 / 1.08; border: 1px solid var(--apoio); border-radius: 14px;
+    aspect-ratio: 8 / 9; border: 1px solid var(--apoio); border-radius: 14px;
     background-image: linear-gradient(var(--apoio) 1px, transparent 1px), linear-gradient(90deg, var(--apoio) 1px, transparent 1px);
-    background-size: 48px 48px; background-position: -1px -1px;
+    background-size: 48px 48px; background-origin: border-box; background-repeat: round; /* sempre um número inteiro de quadros */
     display: grid; place-items: center; overflow: hidden;
   }
   .grafismo svg { width: 82%; height: auto; }
@@ -223,7 +223,7 @@
     padding: 36px; border-radius: 14px; background: var(--noite); color: var(--papel);
     border: 1px solid var(--apoio);
     background-image: linear-gradient(var(--apoio) 1px, transparent 1px), linear-gradient(90deg, var(--apoio) 1px, transparent 1px);
-    background-size: 48px 48px; background-position: right -1px top -1px;
+    background-size: 48px 48px; background-origin: border-box; background-repeat: round; /* sempre um número inteiro de quadros */
   }
   .promo > div:first-child { background: var(--noite); padding: 4px 8px 4px 0; }
   .promo .kicker { color: var(--ambar); }
